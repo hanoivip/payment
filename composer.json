@@ -21,11 +21,6 @@
 			"Hanoivip\\GateClient\\" : "src/"
 		}
 	},
-	"autoload-dev": {
-        	"psr-4": {
-            		"Hanoivip\\GateClient\\Tests\\": "tests/"
-        	}
-    	},
 	"extra" : {
 		"laravel" : {
 			"providers" : [
