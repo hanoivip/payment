@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 use Exception;
 use Hanoivip\Events\Gate\UserTopup;
 use stdClass;
-use Hanoivip\GateClientNew\IRoutingResult;
 
 class TopupService
 {   
@@ -91,76 +90,6 @@ class TopupService
         else
             Cache::add($key, time(), $expires);
     }
-    
-    /**
-     * Kiểm tra trùng thẻ
-     * Kiểm tra nạp lỗi nhiều lần
-     * Tạo log/submission
-     * - Lưu thông tin
-     * - Tạo mã đối xoát
-     * Gọi lên cổng thanh toán
-     * - Cập nhật giá trị
-     * Kích hoạt tính toán thưởng
-     * 
-     * @param string $uid
-     * @param string $serial
-     * @param string $password
-     * @param string $type
-     * @param string $mapping
-     * @return Submission
-     */
-    public function byCard($uid, $serial, $password, $type)
-    {
-        // Validate param: TODO: move to request validation
-        if (empty($serial) || empty($password) || empty($type))
-            throw new Exception('Kiểm tra lại serial/password/loại thẻ.');
-        
-        // Check submited?
-        $exists = Submission::where('serial', $serial)
-                    ->where('password', $password)
-                    ->where('type', $type)
-                    ->get();
-        
-        if (!empty($exists))
-            throw new Exception('Thẻ đã nạp.');
-        
-        // Limit failure rate
-        $lastErrorTs = $this->getLastErrorTs($uid);
-        if (time() - $lastErrorTs < 300)//5mins
-            throw new Exception('Lần nạp thẻ trước bị sai. Cần đợi 5p trước khi tiếp tục. Còn (' . (300 - time() + $lastErrorTs) . ' giây)');
-            
-        // New submission
-        $mapping = uniqid();
-        $sub = new Submission();
-        $sub->user_id = $uid;
-        $sub->serial = $serial;
-        $sub->password = $password;
-        $sub->type = $type;
-        $sub->mapping = $mapping;
-        $sub->penalty = 0;
-        
-        // Invoke
-        $returned = GateFacade::check($type, $serial, $password, $mapping);
-        $sub->api_returned = $returned;
-        $sub->save();
-        
-        $parser = app()->makeWith('GateResponseParser', [$returned]);
-        if ($parser->getValue() > 0)
-        {
-            $sub->value = $parser->getValue();
-            $sub->save();
-            
-            $this->balance->add($uid, $sub->value, "Topup:" . $mapping);
-            event(new UserTopup($uid, $sub->value, $mapping));
-        }
-        if (!$parser->isSuccess())
-        {
-            $this->setLastErrorTs($uid);
-        }
-        return $sub;
-        
-    }
-    
     /**
      * 
      * @param number $uid UserID
@@ -178,10 +107,9 @@ class TopupService
         $objects = [];
         foreach ($submissions as $sub)
         {
-            $obj = new \stdClass();// fast, no need to create view objects class...
+            $obj = new \stdClass();
             //$obj->serial = $sub->serial;
             $obj->password = $sub->password;
-            //$obj->message = $this->getExplainMessage($sub);
             $obj->status = $this->getSubmissionStatus($sub);
             $obj->dvalue = $sub->dvalue;
             $obj->value = $sub->value;
@@ -190,36 +118,6 @@ class TopupService
             $obj->mapping = $sub->mapping;
             $obj->delay = $sub->delay;
             $obj->success = $sub->success;
-            $obj->time = $sub->created_at;//Carbon::parse($sub->created_at)->format('d/M/Y m:H');
-            $objects[] = $obj;
-        }
-        $total = Submission::where('user_id', $uid)->count();
-        return [$objects, ceil($total / 10), $page];
-    }
-    
-    public function getHistorybk($uid, $page = 1, $count = 10)
-    {
-        $submissions = Submission::where('user_id', $uid)
-        ->skip($count * ($page - 1))
-        ->take($count)
-        ->orderBy('id', 'desc')
-        ->get();
-        $objects = [];
-        foreach ($submissions as $sub)
-        {
-            $parser = app()->makeWith('GateResponseParser', [ $sub->api_returned ]);
-            $obj = new \stdClass();// fast, no need to create view objects class...
-            //$obj->serial = $sub->serial;
-            $obj->password = $sub->password;
-            //$obj->message = $this->getExplainMessage($sub);
-            $obj->status = $this->getSubmissionStatus($sub);
-            $obj->dvalue = $sub->dvalue;
-            $obj->value = $sub->value;
-            $obj->penalty = $sub->penalty;
-            //$obj->final_value = $sub->final_value;
-            $obj->mapping = $sub->mapping;
-            $obj->delay = $parser->isDelay();
-            $obj->success = $parser->isSuccess();
             $obj->time = $sub->created_at;//Carbon::parse($sub->created_at)->format('d/M/Y m:H');
             $objects[] = $obj;
         }
@@ -244,40 +142,16 @@ class TopupService
         }
         return $status;
     }
-    
-    public function getExplainMessage($submission)
-    {
-        $parser = app()->makeWith('GateResponseParser', [ $submission->api_returned ]);
-        if ($parser->isSuccess())
-        {
-            $value = $submission->value;
-            if ($parser->isDelay() && empty($value))
-                $message = __('hanoivip::topup.delay');
-            else
-            {
-                $message = __('hanoivip::topup.success', ['value' => $value]);
-                if ($submission->dvalue > 0 && $submission->dvalue != $submission->value)
-                    $message .= __('hanoivip::topup.success-wrong-value', ['cutoff' => $this->getWrongValueCutoff()]);
-            }
-        }
-        else
-        {
-            $message = $parser->getExplainMessage();
-        }
-        return $message;
-    }
-    
-    
     /**
-     * Trả về thẻ trễ
-     * 
-     * + 20190325: Lọc xem có đúng các giá trị cho phép ko?
+     * Trả về thẻ trễ. Nếu thẻ đúng cập nhật giá trị.
+     * Nếu thẻ sai, cập nhật trạng thái
      * 
      * @param string $mapping
      * @param number $value
+     * @param boolean $turnFailed
      * @return boolean
      */
-    public function callback($mapping, $value)
+    public function callback($mapping, $value, $turnFailed)
     {
         $submission = Submission::where('mapping', $mapping)->first();
         if (!empty($submission))
@@ -299,40 +173,11 @@ class TopupService
                     $this->balance->add($submission->user_id, $finalValue, "Topup:" . $mapping);
                     event(new UserTopup($submission->user_id, 0, $finalValue, $mapping));
                 }
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public function callback_bk($mapping, $value, $newReturned = null)
-    {
-        $submission = Submission::where('mapping', $mapping)->first();
-        if (!empty($submission))
-        {
-            /** @var \GateResponseParser $parser */
-            $parser = app()->makeWith('GateResponseParser', [ $submission->api_returned ]);
-            if ($submission->value == 0 && $parser->isDelay())
-            {
-                if ($value > 0)
-                {
-                    Log::debug('Topup callback to update transation value.');
-                    $submission->value = $value;
-                    $finalValue = $value;
-                    if ($submission->dvalue > 0 && $submission->dvalue != $value)
-                    {
-                        $finalValue = intval(min($submission->dvalue, $value) * (100 - $this->getWrongValueCutoff()) / 100);
-                        $submission->penalty = $this->getWrongValueCutoff();
-                    }
-                    $submission->final_value = $finalValue;
-                    $submission->save();
-                    $this->balance->add($submission->user_id, $finalValue, "Topup:" . $mapping);
-                    event(new UserTopup($submission->user_id, 0, $finalValue, $mapping));
-                }
-                elseif (!empty($newReturned))
+                else if ($turnFailed)
                 {
                     Log::debug('Topup callback to update transation from delay to fail.');
-                    $submission->api_returned = $newReturned;
+                    $submission->success = false;
+                    $submission->message = 'Thẻ trễ, sau kiểm tra thấy sai!';
                     $submission->save();
                 }
                 return true;
@@ -351,14 +196,10 @@ class TopupService
     {
         $route = GateFacade::routing($type, $dvalue);
         /** @var IRoutingResult $route */
-        //if (!$ret['available'])
         if (!$route->isAvaiable())
             return __('hanoivip::topup.channel-maintain');
-        //if ($ret['busy'])
         if ($route->isBusy())
             return __('hanoivip::topup.channel-unavailable');
-        //if (empty($ret['pid']))
-        //    throw new Exception('Topup partner ID not determined yet!');
         // Save temp data
         $oldRoute = $this->getTopupSession($uid);
         if (!empty($oldRoute))
@@ -401,18 +242,8 @@ class TopupService
         $dvalue = $route['dvalue'];
         $serial = $params['serial'];
         $password = $params['password'];
-        //$pid = $route['pid'];
-        //$sid = isset($route['sid']) ? $route['sid'] : '';
         $captcha = isset($params['captcha']) ? $params['captcha'] : '';
         
-        /* Dang loi nhieu, mo ra de test
-        $exists = Submission::where('serial', $serial)
-        ->where('password', $password)
-        ->where('type', $type)
-        ->get();
-        if (!$exists->isEmpty())
-            return 'Thẻ đã nạp.');
-        */
         // Limit failure rate. TODO: move to throtte
         $lastErrorTs = $this->getLastErrorTs($uid);
         if (time() - $lastErrorTs < 60)
@@ -428,7 +259,6 @@ class TopupService
         $sub->penalty = 0;
         $sub->mapping = $mapping;
         // Invoke
-        //$returned = GateFacade::checkPrerouted($type, $dvalue, $serial, $password, $mapping, $pid, $sid, $captcha);
         $card = new stdClass();
         $card->serial = $serial;
         $card->password = $password;
@@ -484,7 +314,7 @@ class TopupService
     {
         $route = $this->getTopupSession($uid);
         if (empty($route))
-            throw new Exception('Quá thời gian thực hiện, mời thực hiện lại.');
+            return false;
         $session = $route['session'];
         GateFacade::cancel($session);
         $this->clearTopupSession($uid);
@@ -493,6 +323,6 @@ class TopupService
     
     public function handle(DelayCard $event)
     {
-        return $this->callback($event->mapping, $event->value);
+        return $this->callback($event->mapping, $event->value, $event->turnFailed);
     }
 }

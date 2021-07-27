@@ -1,5 +1,5 @@
 {
-	"name" : "hanoivip/payment",
+	"name" : "hanoivip/gate-client",
 	"type" : "library",
 	"require" : {
 		"php" : ">=7.0.0",
@@ -7,7 +7,7 @@
 		"guzzlehttp/guzzle" : "^6.3",
 		"laravel/framework" : ">=5.5",
 		"laravel/tinker" : "~1.0",
-		"mervick/curl-helper" : "^1.1"
+		"mervick/curl-helper" : "^2.2"
 	},
     "require-dev": {
         "filp/whoops": "~2.0",
@@ -21,6 +21,11 @@
 			"Hanoivip\\GateClient\\" : "src/"
 		}
 	},
+	"autoload-dev": {
+        	"psr-4": {
+            		"Hanoivip\\GateClient\\Tests\\": "tests/"
+        	}
+    	},
 	"extra" : {
 		"laravel" : {
 			"providers" : [
