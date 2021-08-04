@@ -1,13 +1,13 @@
 <?php
 
-namespace Hanoivip\GateClient\Services;
+namespace Hanoivip\Payment\Services;
 
 use Hanoivip\Events\Gate\UserTopup;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Hanoivip\GateClient\Models\StatisticType;
-use Hanoivip\GateClient\Models\Statistic;
+use Hanoivip\Payment\Models\StatisticType;
+use Hanoivip\Payment\Models\Statistic;
 
 class StatisticService
 {

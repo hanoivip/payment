@@ -1,9 +1,10 @@
 <?php
 
-namespace Hanoivip\GateClient;
+namespace Hanoivip\Payment;
 
-use Hanoivip\GateClient\Policies\GiftPolicy;
-use Hanoivip\GateClient\Services\BalanceService;
+use Hanoivip\Payment\Policies\GiftPolicy;
+use Hanoivip\Payment\Services\BalanceService;
+use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Support\ServiceProvider;
 
 class TopupServiceProvider extends ServiceProvider
@@ -15,9 +16,10 @@ class TopupServiceProvider extends ServiceProvider
             return new GiftPolicy($cfg);
         });
         $this->commands([
-            \Hanoivip\GateClient\Commands\PolicyNew::class,
-            \Hanoivip\GateClient\Commands\TestBalance::class,
+            \Hanoivip\Payment\Commands\PolicyNew::class,
+            \Hanoivip\Payment\Commands\TestBalance::class,
         ]);
+        $this->app->bind("LocalPaymentService", NewTopupService::class);
     }
     
     public function boot()
@@ -33,5 +35,6 @@ class TopupServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         $this->loadTranslationsFrom( __DIR__.'/../lang', 'hanoivip');
+        $this->mergeConfigFrom( __DIR__.'/../config/payment.php', 'payment');
     }
 }

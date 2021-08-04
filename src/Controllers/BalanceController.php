@@ -1,9 +1,9 @@
 <?php
 
-namespace Hanoivip\GateClient\Controllers;
+namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
-use Hanoivip\GateClient\Services\BalanceService;
+use Hanoivip\Payment\Services\BalanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

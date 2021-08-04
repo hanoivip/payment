@@ -1,10 +1,9 @@
 <?php
 
-namespace Hanoivip\GateClient\Controllers;
+namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Hanoivip\GateClient\Models\Submission;
 
 class Statistics extends Controller
 {
@@ -39,9 +38,10 @@ class Statistics extends Controller
     
     private function sumIncome($startTime, $endTime)
     {
+        /*
         $sum = Submission::where('created_at', '>=', $startTime)
         ->where('created_at', '<', $endTime)
         ->sum('value');
-        return $sum;
+        return $sum;*/
     }
 }

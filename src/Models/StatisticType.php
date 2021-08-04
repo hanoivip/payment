@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Models;
+namespace Hanoivip\Payment\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

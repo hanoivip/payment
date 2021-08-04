@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Commands;
+namespace Hanoivip\Payment\Commands;
 
 use Illuminate\Console\Command;
 use Hanoivip\Events\Gate\UserTopup;

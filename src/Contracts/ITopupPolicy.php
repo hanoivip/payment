@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Contracts;
+namespace Hanoivip\Payment\Contracts;
 
 interface ITopupPolicy
 {

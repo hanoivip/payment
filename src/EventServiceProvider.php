@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient;
+namespace Hanoivip\Payment;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -8,12 +8,15 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         'Hanoivip\Events\Gate\UserTopup' => [
-            'Hanoivip\GateClient\Services\PolicyService',
-            'Hanoivip\GateClient\Activities\RankingActivity',
-            'Hanoivip\GateClient\Services\UserTopupHandler',
+            'Hanoivip\Payment\Services\PolicyService',
+            'Hanoivip\Payment\Activities\RankingActivity',
+            'Hanoivip\Payment\Services\UserTopupHandler',
         ],
         'Hanoivip\GateClientNew\Event\DelayCard' => [
-            'Hanoivip\GateClient\Services\TopupService',
+            'Hanoivip\Payment\Services\TopupService',
+        ],
+        'Hanovip\Events\Payment\TransactionUpdated' => [
+            'Hanoivip\Payment\Services\NewTopupService'
         ]
     ];
     

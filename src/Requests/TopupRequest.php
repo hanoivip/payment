@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Requests;
+namespace Hanoivip\Payment\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

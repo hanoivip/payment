@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Facades;
+namespace Hanoivip\Payment\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

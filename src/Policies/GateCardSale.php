@@ -1,8 +1,8 @@
 <?php
 
-namespace Hanoivip\GateClient\Policies;
+namespace Hanoivip\Payment\Policies;
 
-use Hanoivip\GateClient\Contracts\ITopupPolicy;
+use Hanoivip\Payment\Contracts\ITopupPolicy;
 
 class GateCardSale implements ITopupPolicy
 {

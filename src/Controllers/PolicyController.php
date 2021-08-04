@@ -1,9 +1,9 @@
 <?php
 
-namespace Hanoivip\GateClient\Controllers;
+namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
-use Hanoivip\GateClient\Services\PolicyService;
+use Hanoivip\Payment\Services\PolicyService;
 use Illuminate\Http\Request;
 
 class PolicyController extends Controller

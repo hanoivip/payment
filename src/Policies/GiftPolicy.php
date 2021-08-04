@@ -1,8 +1,8 @@
 <?php
 
-namespace Hanoivip\GateClient\Policies;
+namespace Hanoivip\Payment\Policies;
 
-use Hanoivip\GateClient\Contracts\ITopupPolicy;
+use Hanoivip\Payment\Contracts\ITopupPolicy;
 
 // 10000,0.5;20000,0.5;30000,0.5;50000,1;100000,1;200000,1;300000,1;500000,1.5;1000000,1.5;2000000,1.5;3000000,1.5;5000000,1.5
 // 10000,0.5;20000,0.5;30000,0.5;50000,0.5;100000,0.5;200000,1;300000,1;500000,1;1000000,1.5;2000000,1.5;3000000,1.5;5000000,1.5

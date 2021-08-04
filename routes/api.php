@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Private APIs
-Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\GateClient\Controllers')->group(function () {
+Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Xem thông tin tài khoản
     Route::any('/topup/info', 'BalanceController@info');
     // List all payment methods
@@ -19,7 +19,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\GateClient\Con
 });
 
 // Public APIs
-Route::prefix('api')->namespace('Hanoivip\GateClient\Controllers')->group(function () {
+Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Lấy xếp hạng tài phú
     Route::get('/topup/rank/global', 'TopupController@globalRank');
     // Lấy xếp hạng tài phú - theo tuần, tháng...

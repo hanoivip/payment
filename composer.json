@@ -1,12 +1,34 @@
 {
-	"name" : "hanoivip/gate-client",
+	"name" : "hanoivip/payment",
 	"type" : "library",
+    "repositories" : [{
+			"type" : "path",
+			"url" : "../payment-contract",
+			"options" : {
+				"symlink" : true
+			}
+		}, {
+			"type" : "path",
+			"url" : "../payment-method-contract",
+			"options" : {
+				"symlink" : true
+			}
+		}, {
+			"type" : "path",
+			"url" : "../events",
+			"options" : {
+				"symlink" : true
+			}
+		}
+	],	
 	"require" : {
 		"php" : ">=7.0.0",
 		"fideloper/proxy" : "~4.0",
 		"guzzlehttp/guzzle" : "^6.3",
 		"laravel/framework" : ">=5.5",
 		"laravel/tinker" : "~1.0",
+		"hanoivip/payment-contract" : "dev-master",
+		"hanoivip/payment-method-contract" : "dev-master",
 		"mervick/curl-helper" : "^2.2"
 	},
     "require-dev": {
@@ -18,19 +40,19 @@
     },
 	"autoload" : {
 		"psr-4" : {
-			"Hanoivip\\GateClient\\" : "src/"
+			"Hanoivip\\Payment\\" : "src/"
 		}
 	},
 	"autoload-dev": {
         	"psr-4": {
-            		"Hanoivip\\GateClient\\Tests\\": "tests/"
+            		"Hanoivip\\Payment\\Tests\\": "tests/"
         	}
     	},
 	"extra" : {
 		"laravel" : {
 			"providers" : [
-				"Hanoivip\\GateClient\\TopupServiceProvider",
-				"Hanoivip\\GateClient\\EventServiceProvider"
+				"Hanoivip\\Payment\\TopupServiceProvider",
+				"Hanoivip\\Payment\\EventServiceProvider"
 			]
 		}
 	}

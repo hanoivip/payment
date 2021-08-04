@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\GateClient\Activities;
+namespace Hanoivip\Payment\Activities;
 
 use Hanoivip\Events\Gate\UserTopup;
 use Illuminate\Support\Facades\Log;

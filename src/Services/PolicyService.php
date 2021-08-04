@@ -1,15 +1,15 @@
 <?php
 
-namespace Hanoivip\GateClient\Services;
+namespace Hanoivip\Payment\Services;
 
 use Carbon\Carbon;
 use Hanoivip\Events\Gate\UserTopup;
 use Illuminate\Support\Facades\Log;
-use Hanoivip\GateClient\Models\Policy;
-use Hanoivip\GateClient\Policies\GiftPolicy;
-use Hanoivip\GateClient\Policies\GateCardSale;
-use Hanoivip\GateClient\Policies\ZingCardSale;
-use Hanoivip\GateClient\Policies\MomoSale;
+use Hanoivip\Payment\Models\Policy;
+use Hanoivip\Payment\Policies\GiftPolicy;
+use Hanoivip\Payment\Policies\GateCardSale;
+use Hanoivip\Payment\Policies\ZingCardSale;
+use Hanoivip\Payment\Policies\MomoSale;
 
 class PolicyService
 {

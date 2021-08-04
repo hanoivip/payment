@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([
     'web',
     'auth:web'
-])->namespace('Hanoivip\GateClient\Controllers')->group(function () {
+])->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // gate default path
-    Route::get('/topup', 'TopupController@topupUI2');
-    Route::get('/history', 'TopupController@history')->name('history');
+    //Route::get('/topup', 'TopupController@topupUI2');
+    //Route::get('/history', 'TopupController@history')->name('history');
     // new gate version
     Route::get('/topup/step1', 'TopupController@topupUI2')->name('topup');
     Route::get('/topup/step2', 'TopupController@selectType')->name('topup.by.type');
@@ -20,12 +20,20 @@ Route::middleware([
     Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
     Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');
+    
+    // 20210728: new flow
+    Route::get('/new/topup', 'NewTopup@listMethods')->name('newtopup');
+    Route::post('/new/topup/shop', 'NewTopup@showShop')->name('newtopup.shop');
+    Route::post('/new/topup', 'NewTopup@choose')->name('newtopup.choose');
+    Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
+    Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
+    //Route::any('/new/topup/history', 'NewTopup@history')->name('newtopup.history');
 });
 
 Route::middleware([
     'web',
     'admin'
-])->namespace('Hanoivip\GateClient\Controllers')
+])->namespace('Hanoivip\Payment\Controllers')
     ->prefix('ecmin')
     ->group(function () {
     // List all current policies

@@ -1,11 +1,11 @@
 <?php
 
-namespace Hanoivip\GateClient\Services;
+namespace Hanoivip\Payment\Services;
 
-use Hanoivip\GateClient\Models\BalanceMod;
-use Hanoivip\GateClient\Models\Balance;
+use Hanoivip\Payment\Models\BalanceMod;
+use Hanoivip\Payment\Models\Balance;
 use Illuminate\Support\Facades\Log;
-use Hanoivip\GateClient\Contracts\IBalance;
+use Hanoivip\Payment\Contracts\IBalance;
 use Hanoivip\Events\Gate\UserFirstTopup;
 
 class BalanceService implements IBalance
