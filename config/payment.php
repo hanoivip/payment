@@ -12,7 +12,7 @@ return [
     'methods' => [
         'credit' => [ 'name' => __('hanoivip::payment.credit'), 'service' => 'CreditPaymentMethod', 'need_config' => false, 
             'enable' => true],// otp? captcha?
-        'tsr1' => ['name' => __('hanoivip::payment.card.tsr'), 'service' => 'TsrPaymentMethod', 
+        'tsr1' => ['name' => __('hanoivip::payment.tsr'), 'service' => 'TsrPaymentMethod', 
             'need_config' => true, 
             'enable' => true, 
             'setting' => ['partner_id' => '0345167261', 'partner_secret' => '0aaf0fd0097a9c5e3b734b59104cffdd']],
