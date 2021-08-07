@@ -129,16 +129,13 @@ class BalanceService implements IBalance
             $obj->balance = $mod->balance;
             $obj->acc_type = $mod->balance_type == 0 ;//? 'TK chính' : 'TK phụ';
             $list = explode(':', $mod->reason);
-            if($list[0]=='Recharge'){
-                $reason = 'Chuyển Vào' . $list[3];
-            }elseif ($list[0]=='TopupPolicy') {
-                $reason = 'Khuyến Mãi';
-            }elseif ($list[0]=='Topup') {
-                $reason = 'Nạp Thẻ';
-            } elseif ($list[0] == 'Proceed') {
-                $reason = 'Xúc tiến';    
-            }else{
-                $reason=$list[0];
+            if($list[0]=='Recharge')
+            {
+                $reason = __('hanoivip::balance.' . $list[0]) . $list[3];
+            }
+            else
+            {
+                $reason = __('hanoivip::balance.' . $list[0]);
             }
             $obj->reason = $reason;
             $obj->time = $mod->created_at;//Carbon::parse($mod->created_at)->format('d/M/Y m:H');
