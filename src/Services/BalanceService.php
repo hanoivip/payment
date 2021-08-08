@@ -136,6 +136,8 @@ class BalanceService implements IBalance
             else
             {
                 $reason = __('hanoivip::balance.' . $list[0]);
+                if (isset($list[1]))
+                    $reason = $reason . ' ' . $list[1];
             }
             $obj->reason = $reason;
             $obj->time = $mod->created_at;//Carbon::parse($mod->created_at)->format('d/M/Y m:H');
