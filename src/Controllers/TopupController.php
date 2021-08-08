@@ -28,9 +28,11 @@ class TopupController extends Controller
         $this->balance = $balance;
         $this->stats = $stats;
     }
-    /*
+    
     public function topupHistory(Request $request)
     {
+        return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
+        /*
         $page = 1;
         if ($request->has('page'))
             $page = $request->input('page');
@@ -43,8 +45,8 @@ class TopupController extends Controller
         else
         {
             return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
-        }
-    }*/
+        }*/
+    }
     
     public function rechargeHistory(Request $request)
     {
