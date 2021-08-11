@@ -5,9 +5,11 @@ Route::middleware([
     'web',
     'auth:web'
 ])->namespace('Hanoivip\Payment\Controllers')->group(function () {
+    
     // gate default path
     //Route::get('/topup', 'TopupController@topupUI2');
     //Route::get('/history', 'TopupController@history')->name('history');
+    
     // new gate version
     Route::get('/topup/step1', 'TopupController@topupUI2')->name('topup');
     Route::get('/topup/step2', 'TopupController@selectType')->name('topup.by.type');

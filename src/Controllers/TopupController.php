@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Log;
 use Exception;
 use Hanoivip\Payment\Services\BalanceService;
 use Hanoivip\Payment\Services\StatisticService;
+use Hanoivip\Payment\Services\TopupService;
 
 /**
  * 
  * @author hanoivip
- *
+ * Old version of payment
  */
 class TopupController extends Controller
 {   
@@ -21,18 +22,21 @@ class TopupController extends Controller
     
     protected $stats;
     
+    protected $topup;
+    
     public function __construct(
         BalanceService $balance, 
-        StatisticService $stats)
+        StatisticService $stats,
+        TopupService $topup)
     {
         $this->balance = $balance;
         $this->stats = $stats;
+        $this->topup = $topup;
     }
     
     public function topupHistory(Request $request)
     {
-        return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
-        /*
+        //return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
         $page = 1;
         if ($request->has('page'))
             $page = $request->input('page');
@@ -45,7 +49,7 @@ class TopupController extends Controller
         else
         {
             return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
-        }*/
+        }
     }
     
     public function rechargeHistory(Request $request)
@@ -157,5 +161,106 @@ class TopupController extends Controller
         if ($request->has('message'))
             $message = $request->input('message');
         return view('hanoivip::topup-success', ['message' => $message]);
+    }
+    
+    public function topupUI2(Request $request)
+    {
+        $uid = Auth::user()->getAuthIdentifier();
+        $cardtypes = $this->topup->getGateStatus();
+        $enabled = $this->topup->getEnableTypes($uid);
+        $cutoffs = $this->topup->getCutoffs($uid);
+        if ($request->ajax())
+        {
+            return ['cardtypes' => $cardtypes, 'enabled' => $enabled, 'cutoffs' => $cutoffs];
+        }
+        else
+        {
+            return view('hanoivip::topup-select-type',
+                ['cardtypes' => $cardtypes, 'enabled' => $enabled, 'cutoffs' => $cutoffs]);
+        }
+    }
+    
+    public function selectType(Request $request)
+    {
+        $type = $request->input('type');
+        $dvalue = $request->input('dvalue');
+        try
+        {
+            $uid = Auth::user()->getAuthIdentifier();
+            $result = $this->topup->prepareByType($uid, $type, $dvalue);
+            if ($request->ajax())
+            {
+                return ['result' => $result];
+            }
+            else
+            {
+                if (gettype($result) == 'string')
+                    return view('hanoivip::topup_result', ['error_message' => $result]);
+                    else
+                        return view('hanoivip::topup-input', ['params' => $result]);
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error('Topup prepare payment exception. Msg:' . $ex->getMessage());
+            return view('hanoivip::topup_result',
+                ['error_message' => __('hanoivip::topup.system-error')]);
+        }
+    }
+    
+    public function topup2(Request $request)
+    {
+        try
+        {
+            $uid = Auth::user()->getAuthIdentifier();
+            $submission = $this->topup->prerouted($uid, $request->all());
+            if (gettype($submission) == 'string')
+            {
+                if ($request->ajax())
+                    return ['result' => ['delay' => false, 'mapping' =>'', 'error_message' => $submission]];
+                    else
+                        return view('hanoivip::topup_result', [ 'error_message' => $submission]);
+            }
+            else
+            {
+                if ($submission->success)
+                {
+                    $message = $submission->message;
+                }
+                else
+                {
+                    $error_message = $submission->message;
+                }
+                if ($request->ajax())
+                {
+                    $result = ['delay' => false, 'mapping' => $submission->mapping];
+                    if (isset($message)) {
+                        $result['message'] = $message;
+                        // add success page for tracking
+                        $result['topath'] = route('topup.success', ['message' => $message]);
+                    }
+                    if (isset($error_message))
+                        $result['error_message'] = $error_message;
+                        if ($submission->delay)
+                            $result['delay'] = true;
+                            return ['result' => $result];
+                }
+                else
+                {
+                    if (isset($message))
+                        return view('hanoivip::topup_result', [ 'message' => $message]);
+                        if (isset($error_message))
+                            return view('hanoivip::topup_result', [ 'error_message' => $error_message]);
+                }
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error('Topup payment exception. Msg:' . $ex->getMessage());
+            if ($request->ajax())
+                return ['result' => ['error_message' => __('hanoivip::topup.system-error')]];
+                return view('hanoivip::topup_result',
+                    [ 'error_message' => __('hanoivip::topup.system-error') ]);
+        }
     }
 }
