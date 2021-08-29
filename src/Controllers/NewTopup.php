@@ -26,8 +26,6 @@ class NewTopup extends Controller
     {
         try
         {
-            $order = $request->input('order');
-            $next = $request->input('next');
             $methods = $this->service->getMethods();
             if ($request->ajax())
             {
@@ -35,6 +33,8 @@ class NewTopup extends Controller
             }
             else
             {
+                $order = $request->input('order');
+                $next = $request->input('next');
                 return view('hanoivip::new-topup-methods', 
                     ['methods' => $methods, 'order' => $order, 'next' => $next]);
             }
@@ -57,8 +57,8 @@ class NewTopup extends Controller
     {
         try 
         {
-            $order = $request->input('order');
             $method = $request->input('method');
+            $order = $request->input('order');
             $next = $request->input('next');
             $result = $this->service->preparePayment($order, $method, $next);
             if ($request->ajax())

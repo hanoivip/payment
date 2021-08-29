@@ -18,6 +18,14 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     Route::any('/topup/historyR', 'TopupController@rechargeHistory');
 });
 
+// New flow
+Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
+    Route::any('/pay/methods', 'NewTopup@listMethods');
+    Route::any('/pay/init', 'NewTopup@choose');
+    Route::any('/pay/do', 'NewTopup@topup');
+    Route::any('/pay/query', 'NewTopup@query');
+});
+
 // Public APIs
 Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Lấy xếp hạng tài phú
