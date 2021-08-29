@@ -12,7 +12,7 @@
 	<input type="hidden" id="next" name="next" value="{{$next}}"/>
 	@foreach ($methods as $code => $method)
 		<input type="radio" id="method" name="method" value="{{$code}}"/>
-		<p>{{$method['name']}}</p>
+		<p>{{$method->name}}</p>
 	@endforeach
 	<button type="submit">{{__('hanoivip::payment.methods.next')}}</button>
 </form>	

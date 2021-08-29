@@ -24,6 +24,7 @@ class NewTopupService
      * Phương pháp nào lỗi hệ thống => không hiển thị
      * Phương pháp nào đang bị khóa => hiển thị mờ
      * @throws Exception
+     * @return \stdClass[]
      */
     public function getMethods()
     {
@@ -36,7 +37,10 @@ class NewTopupService
                 $service = $cfg['service'];
                 // check for implmenetation
                 app()->make($service);
-                $methods[$code] = $cfg;
+                $cfgVo = new \stdClass();
+                $cfgVo->name = $cfg['name'];
+                $cfgVo->service = $service;
+                $methods[$code] = $cfgVo;
             }
             catch (Exception $ex)
             {
