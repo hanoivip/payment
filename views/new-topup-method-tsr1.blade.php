@@ -1,6 +1,6 @@
 @extends('hanoivip::layouts.app')
 
-@section('title', 'Các phương pháp nạp được hỗ trợ')
+@section('title', 'Nạp game với thẻ cào')
 
 @section('content')
 

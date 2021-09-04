@@ -75,6 +75,7 @@ class NewTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("NewTopup start payment exception: " . $ex->getMessage());
+            Log::error(">>>>>>>> " . $ex->getTraceAsString());
             if ($request->ajax())
             {
                 return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
