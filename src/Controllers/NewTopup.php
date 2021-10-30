@@ -89,10 +89,23 @@ class NewTopup extends Controller
     
     public function topup(Request $request)
     {
+        $lock = Cache::lock('NewTopup::topup', 10);
         try
-        {
+        {   
+            if (!$lock->get())
+            {
+                if ($request->ajax())
+                {
+                    return ['error' => 98, 'message' => 'Do not click too fast', 'data' => []];
+                }
+                else
+                {
+                    return view('hanoivip::new-topup-failure', ['message' => 'Do not click too fast']);
+                }
+            }
             $params = $request->all();
             $result = $this->service->payment($params);
+            $lock->release();
             if ($request->ajax())
             {
                 return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
@@ -105,6 +118,7 @@ class NewTopup extends Controller
         catch (Exception $ex)
         {
             Log::error("NewTopup payment exception: " . $ex->getMessage());
+            $lock->release();
             if ($request->ajax())
             {
                 return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
