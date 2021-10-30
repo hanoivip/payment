@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
 /**
  *
@@ -90,7 +91,8 @@ class NewTopup extends Controller
     
     public function topup(Request $request)
     {
-        $lock = Cache::lock('NewTopup::topup', 10);
+		$uid = Auth::user()->getAuthIdentifier();
+        $lock = Cache::lock('NewTopup::topup::' . $uid, 10);
         try
         {   
             if (!$lock->get())
