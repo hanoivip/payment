@@ -42,5 +42,9 @@ return [
             'ZING' => 'Thẻ Vinagame',
         ],
         'values_static' => [50000 => '50k', 100000 => '100k', 200000 => '200k', 300000 => '300k', 500000 => '500k'],
+    ],
+    // web topup methods
+    'webtopup' => [
+        'methods' =>['tsr1']
     ]
 ];

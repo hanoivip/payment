@@ -4,5 +4,8 @@
 
 @section('content')
 
+<p>{{ $message }}</p>        
+<a href="{{ route('newrecharge') }}"><button>Chuyển lại</button></a>
+
 
 @endsection
