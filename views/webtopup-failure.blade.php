@@ -5,6 +5,6 @@
 @section('content')
 
 <p>{{ $message }}</p>        
-<a href="{{ route('webtopup') }}"><button>Chuyển lại</button></a>
+<a href="{{ route('webtopup') }}"><button>Nạp lại</button></a>
 
 @endsection

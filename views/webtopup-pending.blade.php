@@ -8,6 +8,6 @@
 
 <a href="{{ route('newrecharge.refresh', ['trans' => $trans]) }}"><button>Cập nhật</button></a>
 
-<a href="{{ route('webtopup') }}"><button>Chuyển nữa</button></a>
+<a href="{{ route('webtopup') }}"><button>Nạp nữa</button></a>
 
 @endsection

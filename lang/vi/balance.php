@@ -7,5 +7,6 @@ return [
     'Proceed' => 'Xúc tiến',
     'PaymentChanges' => 'Tiền thừa',
     'PaymentRefund' =>'Hoàn tiền',
-    'CreditMethod' => 'Thanh toán',
+    'CreditMethod' => 'Thanh toán bằng webcoin',
+    'WebTopup' => 'Nạp webcoin',
 ];

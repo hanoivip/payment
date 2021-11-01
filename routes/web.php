@@ -14,7 +14,7 @@ Route::middleware([
     // reactjs UI
     Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
     Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
-    Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
+    //Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
     Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
     //
