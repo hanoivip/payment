@@ -169,4 +169,5 @@ class WebTopup extends Controller
                 return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
             }
         }
+    }
 }
