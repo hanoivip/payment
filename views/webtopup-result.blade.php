@@ -9,8 +9,8 @@
 @if ($data->isPending())
 <form method="post" action="{{route('webtopup.query')}}">
 {{ csrf_field() }}
-<input type="hidden" id="trans" name="trans" value="{{$trans->getTransId()}}"/>
-	<button type="submit">Refresh</button>
+<input type="hidden" id="trans" name="trans" value="{{$trans}}"/>
+	<button type="submit">Cập nhật</button>
 </form>
 @endif
 @endsection

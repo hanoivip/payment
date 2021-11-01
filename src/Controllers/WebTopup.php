@@ -154,7 +154,7 @@ class WebTopup extends Controller
             }
             else
             {
-                return view('hanoivip::webtopup-result', ['data' => $result]);
+                return view('hanoivip::webtopup-result', ['data' => $result, 'trans' => $trans]);
             }
         }
         catch (Exception $ex)
