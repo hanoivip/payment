@@ -36,11 +36,11 @@ class WebTopup extends Controller
         $methods = config('payment.webtopup.methods', []);
         if (empty($methods))
         {
-            return view('webtopup-failure');
+            return view('hanoivip::webtopup-failure');
         }
         else if (count($methods) > 1)
         {
-            return view('webtopup-methods');
+            return view('hanoivip::webtopup-methods');
         }
         else
         {
@@ -141,4 +141,32 @@ class WebTopup extends Controller
     {
         
     }
+    
+    public function query(Request $request)
+    {
+        try
+        {
+            $trans = $request->input('trans');
+            $result = $this->service->query($trans);
+            if ($request->ajax())
+            {
+                return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-result', ['data' => $result]);
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("NewTopup query exception: " . $ex->getMessage());
+            if ($request->ajax())
+            {
+                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
+            }
+        }
 }

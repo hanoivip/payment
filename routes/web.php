@@ -28,6 +28,7 @@ Route::middleware([
     Route::get('/webtopup', 'WebTopup@index')->name('webtopup');
     Route::any('/webtopup/method', 'WebTopup@choose')->name('webtopup.method');
     Route::any('/webtopup/done', 'WebTopup@topupDone')->name('webtopup.done');
+    Route::any('/webtopup/query', 'WebTopup@query')->name('webtopup.query');
     Route::any('/webtopup/history', 'WebTopup@history');
 });
 
