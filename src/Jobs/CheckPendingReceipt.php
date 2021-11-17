@@ -23,8 +23,6 @@ class CheckPendingReceipt implements ShouldQueue
     
     private $receipt;
     
-    private $service;
-    
     public function __construct($userId, $receipt)
     {
         $this->userId = $userId;
@@ -34,6 +32,7 @@ class CheckPendingReceipt implements ShouldQueue
     public function handle()
     {
         Redis::funnel('CheckPendingReceipt-payment@' . $this->userId)->limit(1)->then(function () {
+            Log::debug("CheckPendingReceipt at payment $this->userId $this->receipt");
             $result = PaymentFacade::query($this->receipt);
             if ($result instanceof IPaymentResult)
             {
