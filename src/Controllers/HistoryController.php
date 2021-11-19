@@ -14,7 +14,6 @@ use Hanoivip\Payment\Services\NewTopupService;
 /**
  *
  * @author hanoivip
- * Old version of payment
  */
 class HistoryController extends Controller
 {
@@ -38,16 +37,16 @@ class HistoryController extends Controller
         $page = 1;
         if ($request->has('page'))
             $page = $request->input('page');
-            $uid = Auth::user()->getAuthIdentifier();
-            $history = $this->topup->list($uid, $page);
-            if ($request->ajax())
-            {
-                return ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]];
-            }
-            else
-            {
-                return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
-            }
+        $uid = Auth::user()->getAuthIdentifier();
+        $history = $this->topup->list($uid, $page);
+        if ($request->ajax())
+        {
+            return ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]];
+        }
+        else
+        {
+            return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
+        }
     }
     
     public function rechargeHistory(Request $request)
@@ -55,16 +54,16 @@ class HistoryController extends Controller
         $page = 1;
         if ($request->has('page'))
             $page = $request->input('page');
-            $uid = Auth::user()->getAuthIdentifier();
-            $mods = $this->balance->getHistory($uid, $page);
-            if ($request->ajax())
-            {
-                return ['mods' => $mods[0], 'total_page' => $mods[1], 'current_page' => $mods[2]];
-            }
-            else
-            {
-                return view('hanoivip::recharge-history', ['mods' => $mods]);
-            }
+        $uid = Auth::user()->getAuthIdentifier();
+        $mods = $this->balance->getHistory($uid, $page);
+        if ($request->ajax())
+        {
+            return ['mods' => $mods[0], 'total_page' => $mods[1], 'current_page' => $mods[2]];
+        }
+        else
+        {
+            return view('hanoivip::recharge-history', ['mods' => $mods]);
+        }
     }
     
     public function jsTopup(Request $request)

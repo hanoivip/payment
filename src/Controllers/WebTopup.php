@@ -12,6 +12,7 @@ use Hanoivip\Payment\Jobs\CheckPendingReceipt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Facades\BalanceFacade;
+use Hanoivip\Payment\Services\WebtopupRepository;
 
 /**
  *
@@ -23,9 +24,14 @@ class WebTopup extends Controller
 {
     private $service;
     
-    public function __construct(NewTopupService $service)
+    private $logs;
+    
+    public function __construct(
+        NewTopupService $service,
+        WebtopupRepository $logs)
     {
         $this->service = $service;
+        $this->logs = $logs;
     }
     /**
      * Nếu có nhiều hơn 1 phương pháp nạp thì cho chọn
@@ -36,7 +42,7 @@ class WebTopup extends Controller
         $methods = config('payment.webtopup.methods', []);
         if (empty($methods))
         {
-            return view('hanoivip::webtopup-failure');
+            return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.no-method')]);
         }
         else if (count($methods) > 1)
         {
@@ -48,6 +54,7 @@ class WebTopup extends Controller
             $method = $methods[0];
             $next = 'webtopup.done';
             $result = $this->service->preparePayment($order, $method, $next);
+            $this->logs->saveLog(Auth::user()->getAuthIdentifier(), $result->getTransId());
             if ($request->ajax())
             {
                 return ['error' => 0, 'message' => '',
@@ -136,10 +143,59 @@ class WebTopup extends Controller
             }
         }
     }
+    /**
+     * Return for jhistory UI
+     * @param Request $request
+     */
+    public function topupHistory(Request $request)
+    {
+        try
+        {
+            Log::error("Webtopup .......");
+            $userId = Auth::user()->getAuthIdentifier();
+            $page = 0;
+            if ($request->has('page'))
+                $page = $request->input('page');
+            $history = $this->logs->list($userId, $page);
+            if ($request->ajax())
+            {
+                return ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]];
+            }
+            else
+            {
+                return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("Webtopup history exception " . $ex->getMessage());
+            if ($request->ajax())
+            {
+                return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
+            }
+            else
+            {
+                return view('hanoivip::topup-history', ['submits' => [], 'total_page' => 0, 'current_page' => 0]);
+            }
+        }
+    }
     
     public function history(Request $request)
     {
-        
+        try
+        {
+            $userId = Auth::user()->getAuthIdentifier();
+            $page = 0;
+            if ($request->has('page'))
+                $page = $request->input('page');
+            $logs = $this->logs->list($userId, $page);
+            
+        }
+        catch (Exception $ex)
+        {
+            Log::error("Webtopup history exception " . $ex->getMessage());
+            
+        }
     }
     
     public function query(Request $request)

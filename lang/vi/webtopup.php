@@ -17,6 +17,7 @@ return [
         ],
         'empty' => 'Chưa thanh toán lần nào'
     ],
+    'no-method' => 'Không có cách nào để nạp. Mời liên hệ hỗ trợ viên.',
     'callback-error' => 'Xử lý thanh toán gặp lỗi, mời liên hệ hỗ trợ viên. (callback-error)',
     'query-error' => 'Truy vấn giao dịch gặp lỗi, mời thử lại trước khi liên hệ hỗ trợ viên',
     'pending' => 'Giao dịch cần thêm chút thời gian để hoàn thành..đợi thêm vài ..',

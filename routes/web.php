@@ -29,7 +29,7 @@ Route::middleware([
     Route::any('/webtopup/method', 'WebTopup@choose')->name('webtopup.method');
     Route::any('/webtopup/done', 'WebTopup@topupDone')->name('webtopup.done');
     Route::any('/webtopup/query', 'WebTopup@query')->name('webtopup.query');
-    Route::any('/webtopup/history', 'WebTopup@history');
+    Route::any('/webtopup/history', 'WebTopup@history')->name('webtopup.history');
 });
 
 Route::middleware([
@@ -38,4 +38,7 @@ Route::middleware([
 ])->namespace('Hanoivip\Payment\Controllers')
     ->prefix('ecmin')
     ->group(function () {
+        Route::any('/balance/history', 'AdminController@balanceHistory')->name('ecmin.balance.history');
+        
+        Route::any('/webtopup/history', 'AdminController@webtopupHistory')->name('ecmin.webtopup.history');
 });

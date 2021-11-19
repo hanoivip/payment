@@ -1,6 +1,6 @@
 @extends('hanoivip::admin.layouts.admin')
 
-@section('title', 'Kết quả')
+@section('title', 'Thống kê doanh số')
 
 @section('content')
 
