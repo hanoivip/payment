@@ -4,6 +4,12 @@
 
 @section('content')
 
+<style type="text/css">
+	table tr td{
+		border: 1px solid;
+	}=
+</style>
+
 @if (empty($submits))
 <p>Chưa nạp lần nào!</p>
 @else

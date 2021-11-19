@@ -34,6 +34,7 @@ class WebtopupRepository
         ->take($count)
         ->orderBy('id', 'desc')
         ->get();
+        Log::debug(print_r($logs, true));
         if ($logs->isNotEmpty())
         {
             $arr = [];
@@ -43,6 +44,7 @@ class WebtopupRepository
                 $arr[] = $log->trans_id;
                 $times[$log->trans_id] = $log->created_at;
             }
+            Log::debug(print_r($arr, true));
             $submissions = TsrTransaction::whereIn('trans', $arr)->get();
             $objects = [];
             if ($submissions->isNotEmpty())

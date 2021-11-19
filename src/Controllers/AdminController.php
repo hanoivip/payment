@@ -28,7 +28,7 @@ class AdminController extends Controller
 
     public function webtopupHistory(Request $request)
     {
-        $page = 1;
+        $page = 0;
         if ($request->has('page'))
             $page = $request->input('page');
         $tid = $request->input('tid');
@@ -43,7 +43,7 @@ class AdminController extends Controller
 
     public function balanceHistory(Request $request)
     {
-        $page = 1;
+        $page = 0;
         if ($request->has('page'))
             $page = $request->input('page');
         $tid = $request->input('tid');
