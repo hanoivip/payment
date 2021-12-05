@@ -8,13 +8,13 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         'Hanoivip\Events\Gate\UserTopup' => [
-            'Hanoivip\Payment\Services\PolicyService',
-            'Hanoivip\Payment\Activities\RankingActivity',
+            //'Hanoivip\Payment\Services\PolicyService',
+            //'Hanoivip\Payment\Activities\RankingActivity',
             'Hanoivip\Payment\Services\UserTopupHandler',
         ],
-        'Hanoivip\GateClientNew\Event\DelayCard' => [
-            'Hanoivip\Payment\Services\TopupService',
-        ],
+        //'Hanoivip\GateClientNew\Event\DelayCard' => [
+        //    'Hanoivip\Payment\Services\TopupService',
+        //],
         'Hanovip\Events\Payment\TransactionUpdated' => [
             'Hanoivip\Payment\Services\NewTopupService'
         ]

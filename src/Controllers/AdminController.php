@@ -20,10 +20,15 @@ class AdminController extends Controller
 {
 
     protected $logs;
+    
+    protected $stats;
 
-    public function __construct(WebtopupRepository $logs)
+    public function __construct(
+        WebtopupRepository $logs,
+        StatisticService $stats)
     {
         $this->logs = $logs;
+        $this->stats = $stats;
     }
 
     public function webtopupHistory(Request $request)
@@ -62,5 +67,31 @@ class AdminController extends Controller
                 'tid' => $tid
             ]);
         }
+    }
+    
+    public function today()
+    {
+        $key = "today_" . date('Ymd', time());
+        $stats = $this->stats->getStatistics($key);
+        $sum = 0;
+        if ($stats->isNotEmpty())
+            $sum = $stats->first()->total;
+        return view('hanoivip::admin.income-result', ['sum' => $sum]);
+    }
+    
+    public function thisMonth()
+    {
+        $curMonth = date('Ym', time());
+        $key = "income_" . $curMonth;
+        $stats = $this->stats->getStatistics($key);
+        $sum = 0;
+        if ($stats->isNotEmpty())
+            $sum = $stats->first()->total;
+        return view('hanoivip::admin.income-result', ['sum' => $sum]);
+    }
+    
+    public function stats()
+    {
+        return view('hanoivip::admin.stat-income');
     }
 }

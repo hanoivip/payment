@@ -7,7 +7,7 @@ use Hanoivip\Events\Gate\UserTopup;
 
 class TestTopup extends Command
 {
-    protected $signature = 'test:topup {uid}';
+    protected $signature = 'test:topup {uid} {amount}';
     
     protected $description = 'Test of topup';
     
@@ -19,6 +19,7 @@ class TestTopup extends Command
     public function handle()
     {
         $uid = $this->argument('uid');
-        event(new UserTopup($uid, 'VTT', 10000, "8888888"));
+        $amount = $this->argument('amount');
+        event(new UserTopup($uid, 'VTT', $amount, "8888888"));
     }
 }

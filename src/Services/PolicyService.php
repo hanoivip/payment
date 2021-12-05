@@ -66,7 +66,7 @@ class PolicyService
     public function handle(UserTopup $event)
     {
         $myPolicies = $this->getUserPolicies($event->uid);
-        /** @var ITopupPolicy $pol */
+        /** @var Policy $pol */
         foreach ($myPolicies as $pol)
         {
             $gift = $pol->onTopup($event->type, $event->coin);

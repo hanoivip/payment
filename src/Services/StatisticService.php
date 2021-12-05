@@ -1,8 +1,6 @@
 <?php
-
 namespace Hanoivip\Payment\Services;
 
-use Hanoivip\Events\Gate\UserTopup;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -10,42 +8,19 @@ use Hanoivip\Payment\Models\StatisticType;
 use Hanoivip\Payment\Models\Statistic;
 
 class StatisticService
-{
-    // Only global statistic key is/can empty
-    const GLOBAL_STAT_KEY = "";
-    
+{   
     const STAT_CACHE_KEY = "cache_";
     
-    const CACHE_INTERVAL = 3600;
-    
-    public function handle(UserTopup $event)
-    {
-        Log::debug("Statistics topup..");
-        $now = time();
-        $types = StatisticType::where('start_time', '<=', $now)
-                        ->where('end_time', '>', $now)
-                        ->where('disable', false)
-                        ->get();
-        
-        // add default                
-        $globalStat = $this->getGlobalStatType();
-        $types->push($globalStat);
-        
-        /** @var StatisticType $type */
-        foreach ($types->all() as $type)
-        {
-            $this->stat($type->key, $event->uid, $event->coin);
-        }
-    }
+    const CACHE_INTERVAL = 300;
     
     /**
      * Add or create new record
      * 
      * @param string $key
      * @param integer $uid
-     * @param integer $coin
+     * @param integer $num
      */
-    private function stat($key, $uid, $coin)
+    public function stat($key, $uid, $num)
     {
         $stat = Statistic::where('key', $key)
                         ->where('user_id', $uid)
@@ -59,34 +34,20 @@ class StatisticService
             $newStat = new Statistic();
             $newStat->key = $key;
             $newStat->user_id = $uid;
-            $newStat->total = $coin;
+            $newStat->total = $num;
             $newStat->save();
         }
         else
         {
             // add
             $curStat = $stat->first();
-            $curStat->total += $coin;
+            $curStat->total += $num;
             $curStat->save();
         }
             
     }
     
-    private function getGlobalStatType()
-    {
-        $stat = new StatisticType();
-        $stat->key = self::GLOBAL_STAT_KEY;
-        $stat->start_time = 0;
-        $stat->end_time = 0;
-        return $stat;
-    }
-    
-    public function getGlobalStatistics($count = 10)
-    {
-        return $this->getStatistics(self::GLOBAL_STAT_KEY, $count);
-    }
-    
-    public function getStatistics($key, $count = 10)
+    public function getStatistics($key, $page = 0, $count = 10)
     {
         $cacheKey = self::STAT_CACHE_KEY . $key;
         if (Cache::has($cacheKey))
@@ -95,21 +56,21 @@ class StatisticService
             $stats = Statistic::where('key', $key)
             ->orderBy('total', 'desc')
             ->limit($count)
+            ->skip($page * $count)
             ->get();
         else
             $stats = Statistic::where('key', $key)
             ->orderBy('total', 'desc')
+            ->skip($page * $count)
             ->get();
         
         $expires = now()->addSeconds(self::CACHE_INTERVAL);
-        Cache::put($cacheKey, $stats->all(), $expires);
-        return $stats->all();
+        Cache::put($cacheKey, $stats, $expires);
+        return $stats;
     }
     
     public function addKey($key, $starttime = 0, $endtime = 0)
     {
-        if ($key == self::GLOBAL_STAT_KEY)
-            throw new Exception("Statistic can not add new key. The key value is reserved.");
         $stat = StatisticType::where('key', $key)
             ->get();
         if ($stat->isNotEmpty())

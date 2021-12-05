@@ -39,6 +39,9 @@ Route::middleware([
     ->prefix('ecmin')
     ->group(function () {
         Route::any('/balance/history', 'AdminController@balanceHistory')->name('ecmin.balance.history');
-        
         Route::any('/webtopup/history', 'AdminController@webtopupHistory')->name('ecmin.webtopup.history');
+        // Stats
+        Route::get('/stats/stat', 'AdminController@stats')->name('ecmin.stats');
+        Route::any('/stats/today', 'AdminController@today')->name('ecmin.stats.today');
+        Route::any('/stats/month', 'AdminController@thisMonth')->name('ecmin.stats.month');
 });
