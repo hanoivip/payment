@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\PaymentContract\Facades\PaymentFacade;
 use Hanoivip\Payment\Facades\BalanceFacade;
+use Hanoivip\Events\Gate\UserTopup;
 
 class CheckPendingReceipt implements ShouldQueue
 {
@@ -46,6 +47,7 @@ class CheckPendingReceipt implements ShouldQueue
                 }
                 else 
                 {
+                    event(new UserTopup($this->userId, 0, $result->getAmount(), $this->receipt));
                     BalanceFacade::add($this->userId, $result->getAmount(), "WebTopup:" . $this->receipt);
                 }
             }

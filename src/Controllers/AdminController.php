@@ -3,14 +3,15 @@ namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Hanoivip\Payment\Services\BalanceService;
-use Hanoivip\Payment\Services\StatisticService;
+use Hanoivip\Payment\Models\Transaction;
 use Hanoivip\Payment\Services\NewTopupService;
+use Hanoivip\Payment\Services\StatisticService;
+use Hanoivip\Payment\Jobs\CheckPendingReceipt;
 use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Facades\BalanceFacade;
+use Hanoivip\Events\Gate\UserTopup;
 
 /**
  *
@@ -22,13 +23,17 @@ class AdminController extends Controller
     protected $logs;
     
     protected $stats;
+    
+    protected $service;
 
     public function __construct(
         WebtopupRepository $logs,
-        StatisticService $stats)
+        StatisticService $stats,
+        NewTopupService $service)
     {
         $this->logs = $logs;
         $this->stats = $stats;
+        $this->service = $service;
     }
 
     public function webtopupHistory(Request $request)
@@ -93,5 +98,83 @@ class AdminController extends Controller
     public function stats()
     {
         return view('hanoivip::admin.stat-income');
+    }
+    
+    public function retry(Request $request)
+    {
+        $receipt = $request->input('receipt');
+        $transaction = Transaction::where('trans_id', $receipt)->first();
+        if (empty($transaction))
+        {
+            return view('hanoivip::admin.webtopup-receipt-retrigger', ['message' => 'Receipt not found']);
+        }
+        $order = $transaction->order;
+        $tid = explode('@', $order)[1];
+        try
+        {
+            $result = $this->service->query($receipt);
+            if (gettype($result) == 'string')
+            {
+                if ($request->ajax())
+                {
+                    return ['error' => 1, 'message' => $result, 'data' => []];
+                }
+                else
+                {
+                    return view('hanoivip::admin.webtopup-failure', ['message' => $result]);
+                }
+            }
+            else
+            {
+                if ($result->isPending())
+                {
+                    dispatch(new CheckPendingReceipt($tid, $receipt))->delay(60);
+                    if ($request->ajax())
+                    {
+                        return ['error' => 0, 'message' => 'pending', 'data' => ['trans' => $receipt]];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-pending', ['trans' => $receipt]);
+                    }
+                }
+                else if ($result->isFailure())
+                {
+                    if ($request->ajax())
+                    {
+                        return ['error' => 2, 'message' => $result->getDetail(), 'data' => []];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-failure', ['message' => $result->getDetail()]);
+                    }
+                }
+                else
+                {
+                    event(new UserTopup($tid, 0, $result->getAmount(), $receipt));
+                    BalanceFacade::add($tid, $result->getAmount(), "WebTopup:" . $receipt);
+                    if ($request->ajax())
+                    {
+                        return ['error' => 0, 'message' => 'success', 'data' => []];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-success');
+                    }
+                }
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("WebTopup payment callback exception:" . $ex->getMessage());
+            if ($request->ajax())
+            {
+                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
+            }
+        }
     }
 }

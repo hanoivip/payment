@@ -7,12 +7,12 @@ use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Illuminate\Support\Facades\Cache;
 use Hanoivip\Payment\Jobs\CheckPendingReceipt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Payment\Services\WebtopupRepository;
+use Hanoivip\Events\Gate\UserTopup;
 
 /**
  *
@@ -50,11 +50,12 @@ class WebTopup extends Controller
         }
         else
         {
-            $order = 'WebTopup@' . Str::random(6);
+            $userId = Auth::user()->getAuthIdentifier();
+            $order = "WebTopup@$userId@" . Str::random(6);
             $method = $methods[0];
             $next = 'webtopup.done';
             $result = $this->service->preparePayment($order, $method, $next);
-            $this->logs->saveLog(Auth::user()->getAuthIdentifier(), $result->getTransId());
+            $this->logs->saveLog($userId, $result->getTransId());
             if ($request->ajax())
             {
                 return ['error' => 0, 'message' => '',
@@ -77,6 +78,7 @@ class WebTopup extends Controller
     {
         //$order = $request->input('order');
         $receipt = $request->input('receipt');
+        $userId = Auth::user()->getAuthIdentifier();
         try 
         {
             $result = $this->service->query($receipt);
@@ -95,7 +97,7 @@ class WebTopup extends Controller
             {
                 if ($result->isPending())
                 {
-                    dispatch(new CheckPendingReceipt(Auth::user()->getAuthIdentifier(), $receipt))->delay(60);
+                    dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
                     if ($request->ajax())
                     {
                         return ['error' => 0, 'message' => 'pending', 'data' => ['trans' => $receipt]];
@@ -118,7 +120,8 @@ class WebTopup extends Controller
                 }
                 else 
                 {
-                    BalanceFacade::add(Auth::user()->getAuthIdentifier(), $result->getAmount(), "WebTopup:" . $receipt);
+                    event(new UserTopup($userId, 0, $result->getAmount(), $receipt));
+                    BalanceFacade::add($userId, $result->getAmount(), "WebTopup:" . $receipt);
                     if ($request->ajax())
                     {
                         return ['error' => 0, 'message' => 'success', 'data' => []];
