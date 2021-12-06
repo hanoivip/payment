@@ -17,7 +17,7 @@
 <table>
 @foreach ($mods as $mod)
 <tr>
-    <td>{{$mod->acc_type}}</td>
+    <td>{{$mod->acc_type == 1 ? "chính" : "phụ"}}</td>
     <td>{{$mod->balance}}</td>
     <td>{{$mod->reason}}</td>
     <td>{{$mod->time}}</td>

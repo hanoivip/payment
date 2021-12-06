@@ -58,9 +58,8 @@ class WebtopupRepository
                     $obj->value = $sub->value;
                     $obj->penalty = $obj->status == 3 ? '50' : '0';
                     $obj->mapping = $sub->trans;
-                    //$obj->delay = $sub->delay;
-                    //$obj->success = $sub->success;
                     $obj->time = $times[$sub->trans];
+                    $obj->trans = $sub->trans;
                     $objects[] = $obj;
                 }
                 $total = WebtopupLogs::where('user_id', $userId)->count();

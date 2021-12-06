@@ -12,6 +12,7 @@ use Hanoivip\Payment\Jobs\CheckPendingReceipt;
 use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Events\Gate\UserTopup;
+use Hanoivip\Payment\Models\WebtopupLogs;
 
 /**
  *
@@ -103,13 +104,12 @@ class AdminController extends Controller
     public function retry(Request $request)
     {
         $receipt = $request->input('receipt');
-        $transaction = Transaction::where('trans_id', $receipt)->first();
-        if (empty($transaction))
+        $log = WebtopupLogs::where('trans_id', $receipt)->first();
+        if (empty($log))
         {
-            return view('hanoivip::admin.webtopup-receipt-retrigger', ['message' => 'Receipt not found']);
+            return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt not found']);
         }
-        $order = $transaction->order;
-        $tid = explode('@', $order)[1];
+        $tid = $log->user_id;
         try
         {
             $result = $this->service->query($receipt);
@@ -121,7 +121,7 @@ class AdminController extends Controller
                 }
                 else
                 {
-                    return view('hanoivip::admin.webtopup-failure', ['message' => $result]);
+                    return view('hanoivip::admin.webtopup-retry-result', ['message' => $result]);
                 }
             }
             else
@@ -135,7 +135,7 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-pending', ['trans' => $receipt]);
+                        return view('hanoivip::webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
                     }
                 }
                 else if ($result->isFailure())
@@ -146,7 +146,7 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-failure', ['message' => $result->getDetail()]);
+                        return view('hanoivip::webtopup-retry-result', ['message' => 'Err:' . $result->getDetail()]);
                     }
                 }
                 else
@@ -159,7 +159,7 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-success');
+                        return view('hanoivip::webtopup-retry-result', ['message' => "Thành công."]);
                     }
                 }
             }

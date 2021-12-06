@@ -51,7 +51,7 @@ class WebTopup extends Controller
         else
         {
             $userId = Auth::user()->getAuthIdentifier();
-            $order = "WebTopup@$userId@" . Str::random(6);
+            $order = "WebTopup@" . Str::random(6);
             $method = $methods[0];
             $next = 'webtopup.done';
             $result = $this->service->preparePayment($order, $method, $next);

@@ -17,12 +17,34 @@
 <table>
 @foreach ($submits as $submit)
 <tr>
-    <td>{{$submit->status}}</td>
+	@switch($submit->status)
+		@case(0)
+			<td>Thành công</td>
+			@break
+		@case(1)
+			<td>Lỗi</td>
+			@break
+		@case(2)
+			<td>Trễ</td>
+			@break
+		@case(3)
+			<td>Sai m.giá</td>
+			@break
+	@endswitch
     <td>{{$submit->password}}</td>
     <td>{{$submit->dvalue}}</td>
     <td>{{$submit->penalty}}</td>
     <td>{{$submit->value}}</td>
     <td>{{$submit->time}}</td>
+    <td>
+    	@if ($submit->status == 2)
+    		<form method="POST" action="{{ route('ecmin.webtopup.retry') }}">
+                {{ csrf_field() }}
+            <input id="receipt" name="receipt" type="hidden" value="{{$submit->trans}}">
+            <button type="submit" class="btn btn-primary">Trả</button>
+            </form>
+    	@endif
+    </td>
 </tr>
 @endforeach
 </table>
