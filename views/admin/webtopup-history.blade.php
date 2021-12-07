@@ -37,7 +37,7 @@
     <td>{{$submit->value}}</td>
     <td>{{$submit->time}}</td>
     <td>
-    	@if ($submit->status == 2)
+    	@if ($submit->status != 1)
     		<form method="POST" action="{{ route('ecmin.webtopup.retry') }}">
                 {{ csrf_field() }}
             <input id="receipt" name="receipt" type="hidden" value="{{$submit->trans}}">

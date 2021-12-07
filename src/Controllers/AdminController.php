@@ -109,7 +109,14 @@ class AdminController extends Controller
         {
             return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt not found']);
         }
+        if (!empty($log->callback))
+        {
+            return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt was done']);
+        }
         $tid = $log->user_id;
+        $log->callback = true;
+        $log->by_admin = true;
+        $log->save();
         try
         {
             $result = $this->service->query($receipt);

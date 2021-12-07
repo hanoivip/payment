@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Events\Gate\UserTopup;
+use Hanoivip\Payment\Models\WebtopupLogs;
 
 /**
  *
@@ -76,9 +77,35 @@ class WebTopup extends Controller
     
     public function topupDone(Request $request)
     {
-        //$order = $request->input('order');
         $receipt = $request->input('receipt');
         $userId = Auth::user()->getAuthIdentifier();
+        $log = WebtopupLogs::where('user_id', $userId)
+        ->where('trans_id', $receipt)
+        ->first();
+        if (empty($log))
+        {
+            if ($request->ajax())
+            {
+                return ['error' => 3, 'message' => 'Receipt not exists', 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => 'Receipt not exists']);
+            }
+        }
+        if (!empty($log->callback))
+        {
+            if ($request->ajax())
+            {
+                return ['error' => 4, 'message' => 'Receipt was done', 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => 'Receipt was done']);
+            }
+        }
+        $log->callback = true;
+        $log->save();
         try 
         {
             $result = $this->service->query($receipt);
@@ -154,7 +181,7 @@ class WebTopup extends Controller
     {
         try
         {
-            Log::error("Webtopup .......");
+            //Log::error("Webtopup .......");
             $userId = Auth::user()->getAuthIdentifier();
             $page = 0;
             if ($request->has('page'))
