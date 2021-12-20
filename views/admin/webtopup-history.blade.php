@@ -44,6 +44,13 @@
             <button type="submit" class="btn btn-primary">Trả</button>
             </form>
     	@endif
+    	@if ($submit->status == 1)
+    		<form method="POST" action="{{ route('ecmin.webtopup.check') }}">
+                {{ csrf_field() }}
+            <input id="receipt" name="receipt" type="hidden" value="{{$submit->trans}}">
+            <button type="submit" class="btn btn-primary">Ktra</button>
+            </form>
+    	@endif
     </td>
 </tr>
 @endforeach

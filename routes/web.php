@@ -47,4 +47,5 @@ Route::middleware([
         // Ops 
         //Route::any('/webtopup', 'AdminController@ops')->name('ecmin.webtopup');
         Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
+        Route::any('/webtopup/check', 'AdminController@check')->name('ecmin.webtopup.check');
 });

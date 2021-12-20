@@ -13,6 +13,7 @@ use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Events\Gate\UserTopup;
 use Hanoivip\Payment\Models\WebtopupLogs;
+use phpDocumentor\Reflection\Element;
 
 /**
  *
@@ -142,7 +143,7 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
+                        return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
                     }
                 }
                 else if ($result->isFailure())
@@ -153,7 +154,7 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-retry-result', ['message' => 'Err:' . $result->getDetail()]);
+                        return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Err:' . $result->getDetail()]);
                     }
                 }
                 else
@@ -166,14 +167,81 @@ class AdminController extends Controller
                     }
                     else
                     {
-                        return view('hanoivip::webtopup-retry-result', ['message' => "Thành công."]);
+                        return view('hanoivip::admin.webtopup-retry-result', ['message' => "Thành công."]);
                     }
                 }
             }
         }
         catch (Exception $ex)
         {
-            Log::error("WebTopup payment callback exception:" . $ex->getMessage());
+            Log::error("WebTopup  callback exception:" . $ex->getMessage());
+            if ($request->ajax())
+            {
+                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
+            }
+        }
+    }
+    
+    public function check(Request $request)
+    {
+        $receipt = $request->input('receipt');
+        $log = WebtopupLogs::where('trans_id', $receipt)->first();
+        if (empty($log))
+        {
+            return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt not found']);
+        }
+        $tid = $log->user_id;
+        $log->callback = true;
+        $log->by_admin = true;
+        $log->save();
+        try
+        {
+            $resultCache = $this->service->query($receipt);
+            if (gettype($resultCache) == 'string')
+            {
+                return view('hanoivip::admin.webtopup-retry-result', ['message' => $resultCache]);
+            }
+            else
+            {
+                if ($resultCache->isPending() || $resultCache->isSuccess())
+                {
+                    return view('hanoivip::webtopup-retry-result', ['message' => 'No thing to do']);
+                }
+                else 
+                {
+                    $resultForce = $this->service->query($receipt, true);
+                    if (gettype($resultForce) == 'string')
+                    {
+                        return view('hanoivip::admin.webtopup-retry-result', ['message' => $resultForce]);
+                    }
+                    else 
+                    {
+                        if ($resultForce->isFailure())
+                        {
+                            return view('hanoivip::admin.webtopup-retry-result', ['message' => $resultForce->getDetail()]);
+                        }
+                        else if ($resultForce->isPending())
+                        {
+                            dispatch(new CheckPendingReceipt($tid, $receipt))->delay(60);
+                            return view('hanoivip::webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
+                        }
+                        else
+                        {
+                            event(new UserTopup($tid, 0, $resultForce->getAmount(), $receipt));
+                            BalanceFacade::add($tid, $resultForce->getAmount(), "WebTopup:" . $receipt);
+                            return view('hanoivip::webtopup-retry-result', ['message' => "OK. Đã trả xu."]);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("WebTopup admin check exception:" . $ex->getMessage());
             if ($request->ajax())
             {
                 return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];

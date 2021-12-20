@@ -145,20 +145,21 @@ class NewTopupService
      * Khởi tạo phương thức nạp
      * Gửi yêu cầu tới phương thức nạp
      * @param string $transId Transaction ID = Purchase Token
+     * @param boolean $force Bắt buộc kiểm tra từ kênh nạp
      * @return IPaymentResult
      * @throws Exception
      */
-    public function query($transId)
+    public function query($transId, $force = false)
     {
         $record = $this->transactions->get($transId);
         /** @var IPaymentResult $result */
         $result = new SavedPaymentResult($transId, $record->result);
-        if ($result->isPending())
+        if ($result->isPending() || $force)
         {
             $method = $record->method;
             $service = $this->getMethodImplement($method);
             /** @var IPaymentMethod $service */
-            $result = $service->query($record);
+            $result = $service->query($record, $force);
             $this->transactions->saveResult($record, $result);
         }
         return $result;
