@@ -60,7 +60,8 @@ class WebtopupRepository
                     $obj->mapping = $sub->trans;
                     $obj->time = $times[$sub->trans];
                     $obj->trans = $sub->trans;
-                    $objects[] = $obj;
+                    if (!empty($obj->password))
+                        $objects[] = $obj;
                 }
                 $total = WebtopupLogs::where('user_id', $userId)->count();
                 return [$objects, ceil($total / 10), $page];

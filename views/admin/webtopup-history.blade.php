@@ -48,6 +48,9 @@
 </tr>
 @endforeach
 </table>
+@for ($i=0; $i<$total_page; ++$i)
+	<a href="{{route('ecmin.webtopup.history', ['page' => $i, 'tid' => $tid])}}">{{$i}}</a>
+@endfor
 
 @endif
 
