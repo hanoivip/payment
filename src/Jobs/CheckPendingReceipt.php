@@ -18,7 +18,7 @@ class CheckPendingReceipt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    public $tries = 15;
+    public $tries = 30;
     
     private $userId;
     
@@ -39,7 +39,7 @@ class CheckPendingReceipt implements ShouldQueue
             {
                 if ($result->isPending())
                 {
-                    $this->release(60);
+                    $this->release(180);
                 }
                 else if ($result->isFailure())
                 {
@@ -53,12 +53,12 @@ class CheckPendingReceipt implements ShouldQueue
             }
             else 
             {
-                Log::error("CheckPendingReceipt query transaction $this->receipt error..retry after 2min");
-                $this->release(120);
+                Log::error("CheckPendingReceipt query transaction $this->receipt error..retry after 10 min");
+                $this->release(600);
             }
         }, function () {
             // Could not obtain lock...
-            return $this->release(60);
+            return $this->release(120);
         });
             
     }
