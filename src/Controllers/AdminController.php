@@ -102,7 +102,7 @@ class AdminController extends Controller
         $sum = 0;
         if ($request->getMethod() == 'POST')
         {
-            $month = $request->get('month');
+            $month = $request->input('month');
             $key = "income_" . $month;
             $stats = $this->stats->getStatistics($key);
             if ($stats->isNotEmpty())
