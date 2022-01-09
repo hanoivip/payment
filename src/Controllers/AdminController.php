@@ -97,6 +97,20 @@ class AdminController extends Controller
         return view('hanoivip::admin.income-result', ['sum' => $sum]);
     }
     
+    public function byMonth(Request $request)
+    {
+        $sum = 0;
+        if ($request->getMethod() == 'POST')
+        {
+            $month = $request->get('month');
+            $key = "income_" . $month;
+            $stats = $this->stats->getStatistics($key);
+            if ($stats->isNotEmpty())
+                $sum = $stats->first()->total;
+        }
+        return view('hanoivip::admin.stat-by-month', ['sum' => $sum]);
+    }
+    
     public function stats()
     {
         return view('hanoivip::admin.stat-income');

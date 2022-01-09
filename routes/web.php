@@ -44,6 +44,7 @@ Route::middleware([
         Route::get('/stats/stat', 'AdminController@stats')->name('ecmin.stats');
         Route::any('/stats/today', 'AdminController@today')->name('ecmin.stats.today');
         Route::any('/stats/month', 'AdminController@thisMonth')->name('ecmin.stats.month');
+        Route::any('/stats/bymonth', 'AdminController@byMonth')->name('ecmin.stats.bymonth');
         // Ops 
         //Route::any('/webtopup', 'AdminController@ops')->name('ecmin.webtopup');
         Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
