@@ -25,6 +25,7 @@ class WebtopupRepository
         $log->user_id = $userId;
         $log->trans_id = $transId;
         $log->save();
+        return true;
     }
     
     public function list($userId, $page = 0, $count = 10)

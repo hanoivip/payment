@@ -23,4 +23,6 @@ return [
     'pending' => 'Giao dịch cần thêm chút thời gian để hoàn thành..đợi thêm vài ..',
     'success' => 'Nạp xu web thành công',
     'callback-in-progress' => 'Đang xử lý rồi, hãy đợi chút..',
+    'error-occured' => 'Lỗi xẩy ra. Mời thử lại! (ex)',
+    'log-fail' => 'Lỗi xẩy ra. Mời thử lại! (log )',
 ];

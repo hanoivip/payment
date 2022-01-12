@@ -55,17 +55,31 @@ class WebTopup extends Controller
             $order = "WebTopup@" . Str::random(6);
             $method = $methods[0];
             $next = 'webtopup.done';
-            $result = $this->service->preparePayment($order, $method, $next);
-            $this->logs->saveLog($userId, $result->getTransId());
-            if ($request->ajax())
+            try
             {
-                return ['error' => 0, 'message' => '',
-                    'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
+                $result = $this->service->preparePayment($order, $method, $next);
+                if ($this->logs->saveLog($userId, $result->getTransId()))
+                {
+                    if ($request->ajax())
+                    {
+                        return ['error' => 0, 'message' => '',
+                            'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
+                    }
+                    else
+                    {
+                        return view('hanoivip::new-topup-method-' . $method,
+                            ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]);
+                    }
+                }
+                else
+                {
+                    return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.log-fail')]);
+                }
             }
-            else
+            catch (Exception $ex)
             {
-                return view('hanoivip::new-topup-method-' . $method,
-                    ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]);
+                Log::error("Webtopup index exception:" + $ex->getMessage());
+                return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.exception')]);
             }
         }
     }
