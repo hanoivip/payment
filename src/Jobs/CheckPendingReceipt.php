@@ -18,6 +18,7 @@ class CheckPendingReceipt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
+    // 20mins fast check + 500mins slow check
     public $tries = 60;
     
     private $userId;
@@ -40,7 +41,7 @@ class CheckPendingReceipt implements ShouldQueue
                 if ($result->isPending())
                 {
                     if ($this->attempts() < 10)
-                        $this->release(180);
+                        $this->release(120);
                     else 
                         $this->release(600);
                 }
