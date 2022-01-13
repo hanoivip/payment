@@ -18,7 +18,7 @@ class CheckPendingReceipt implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    public $tries = 30;
+    public $tries = 60;
     
     private $userId;
     
@@ -39,7 +39,10 @@ class CheckPendingReceipt implements ShouldQueue
             {
                 if ($result->isPending())
                 {
-                    $this->release(180);
+                    if ($this->attempts() < 10)
+                        $this->release(180);
+                    else 
+                        $this->release(600);
                 }
                 else if ($result->isFailure())
                 {
