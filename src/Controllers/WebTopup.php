@@ -161,8 +161,9 @@ class WebTopup extends Controller
                 }
                 else 
                 {
-                    event(new UserTopup($userId, 0, $result->getAmount(), $receipt));
-                    BalanceFacade::add($userId, $result->getAmount(), "WebTopup:" . $receipt);
+                    dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+                    //event(new UserTopup($userId, 0, $result->getAmount(), $receipt));
+                    //BalanceFacade::add($userId, $result->getAmount(), "WebTopup:" . $receipt);
                     if ($request->ajax())
                     {
                         return ['error' => 0, 'message' => 'success', 'data' => []];
