@@ -47,7 +47,6 @@ class BalanceService implements IBalance
             $balance->balance_type = $type;
             $balance->balance = $value;
             $balance->save();
-            
             if ($type == 0)
                 event(new UserFirstTopup($uid, $value));
         }

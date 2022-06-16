@@ -1,6 +1,6 @@
 @extends('hanoivip::layouts.app')
 
-@section('title', 'Nạp game với thẻ cào')
+@section('title', 'Nạp game với thẻ cào.')
 
 @section('content')
 
