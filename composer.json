@@ -19,12 +19,6 @@
 			"options" : {
 				"symlink" : true
 			}
-		}, {
-			"type" : "path",
-			"url" : "../user",
-			"options" : {
-				"symlink" : true
-			}
 		}
 	],	
 	"require" : {
@@ -35,7 +29,6 @@
 		"laravel/tinker" : "~1.0",
 		"hanoivip/payment-contract" : "dev-main",
 		"hanoivip/payment-method-contract" : "dev-main",
-		"hanoivip/user" : "dev-master",
 		"mervick/curl-helper" : "^2.2"
 	},
     "require-dev": {

@@ -4,8 +4,6 @@ namespace Hanoivip\Payment\Services;
 use Hanoivip\Events\Gate\UserTopup;
 use Hanoivip\Payment\Models\StatisticType;
 use Illuminate\Support\Facades\Log;
-use Hanoivip\User\Facades\UserFacade;
-use Hanoivip\Payment\Notifications\UserTopupSuccess;
 
 class UserTopupHandler
 {       
@@ -34,8 +32,5 @@ class UserTopupHandler
         {
             $this->stat($type->key, $event->uid, $event->coin);
         }
-        Log::debug("Notice players..");
-        $user = UserFacade::getUserCredentials($event->uid);
-        $user->notify(new UserTopupSuccess($event->type, $event->coin, $event->mapping));
     }
 }
