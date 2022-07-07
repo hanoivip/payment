@@ -267,7 +267,7 @@ class WebTopup extends Controller
             }
         }
     }
-	
+	// order & pay with credit, at once
 	public function quick(Request $request)
     {
         $methods = config('payment.webtopup.methods', []);
@@ -285,8 +285,13 @@ class WebTopup extends Controller
                 $result = $this->service->preparePayment($order, $method, '');
                 if ($this->logs->saveLog($userId, $result->getTransId()))
                 {
+                    $payResult = $this->service->payment(['trans' => $order]);
+                    //$cbResult = $this->service->query($order);
                     return ['error' => 0, 'message' => '',
-                            'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
+                        'data' => [
+                            'trans' => $payResult->getTransId(), 
+                            'guide' => $payResult->getGuide(), 
+                            'data' => $payResult->getData()]];
                 }
                 else
                 {
