@@ -267,8 +267,7 @@ class WebTopup extends Controller
             }
         }
     }
-	// order & pay with credit, at once
-	public function quick(Request $request)
+    public function quickTopup(Request $request)
     {
         $methods = config('payment.webtopup.methods', []);
         if (empty($methods))
@@ -278,21 +277,15 @@ class WebTopup extends Controller
         else
         {
             $userId = Auth::user()->getAuthIdentifier();
-            $order = $request->input('order');
-            $item = $request->input('item');
+            $order = "WebTopup@" . Str::random(6);
             $method = $methods[0];
             try
             {
                 $result = $this->service->preparePayment($order, $method, '');
                 if ($this->logs->saveLog($userId, $result->getTransId()))
                 {
-                    $payResult = $this->service->payment(['trans' => $order]);
-                    //$cbResult = $this->service->query($order);
                     return ['error' => 0, 'message' => '',
-                        'data' => [
-                            'trans' => $payResult->getTransId(), 
-                            'guide' => $payResult->getGuide(), 
-                            'data' => $payResult->getData()]];
+                        'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
                 }
                 else
                 {
@@ -304,6 +297,40 @@ class WebTopup extends Controller
                 Log::error("Webtopup index exception:" + $ex->getMessage());
                 return ['error' => 3, 'message' => '', 'data' => []];
             }
+        }
+    }
+	// pay with credit, at once
+	public function quickPayment(Request $request)
+    {
+        $userId = Auth::user()->getAuthIdentifier();
+        $order = $request->input('order');
+        //?fuck
+        $order = str_replace("\"", "", $order);
+        //$item = $request->input('item');
+        $method = 'credit';
+        try
+        {
+            $result = $this->service->preparePayment($order, $method, '');
+            if ($this->logs->saveLog($userId, $result->getTransId()))
+            {
+                $payResult = $this->service->payment(['trans' => $result->getTransId()]);
+                return ['error' => 0, 'message' => '', 'data' => [ 
+                    'trans' => $payResult->getTransId(),
+                    'detail' => $payResult->getDetail(),
+                    'isFailure' => $payResult->isFailure(),
+                    'isPending' => $payResult->isPending(),
+                    'isSuccess' => $payResult->isSuccess()
+                ]];
+            }
+            else
+            {
+                return ['error' => 2, 'message' => '', 'data' => []];
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("Webtopup index exception:" + $ex->getMessage());
+            return ['error' => 3, 'message' => '', 'data' => []];
         }
     }
 }
