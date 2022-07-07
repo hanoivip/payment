@@ -278,7 +278,8 @@ class WebTopup extends Controller
         else
         {
             $userId = Auth::user()->getAuthIdentifier();
-            $order = "WebTopup@" . Str::random(6);
+            $order = $request->input('order');
+            $item = $request->input('item');
             $method = $methods[0];
             try
             {
