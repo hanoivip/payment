@@ -269,7 +269,6 @@ class WebTopup extends Controller
         }
     }
     /**
-     * @deprecated
      * @param unknown $request
      */ 
     public function quickTopup(Request $request)
