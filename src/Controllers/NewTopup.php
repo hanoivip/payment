@@ -46,11 +46,11 @@ class NewTopup extends Controller
             Log::error("NewTopup list methods exception: " . $ex->getMessage());
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip::newtopup.methods.error'), 'data' => []];
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip::newtopup.methods.error')]);
             }
         }
     }
@@ -77,14 +77,14 @@ class NewTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("NewTopup start payment exception: " . $ex->getMessage());
-            Log::error(">>>>>>>> " . $ex->getTraceAsString());
+            //Log::error(">>>>>>>> " . $ex->getTraceAsString());
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip::newtopup.choose.error'), 'data' => []];
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip::newtopup.choose.error')]);
             }
         }
     }
@@ -124,11 +124,11 @@ class NewTopup extends Controller
             $lock->release();
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip::newtopup.topup.error'), 'data' => []];
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip::newtopup.topup.error')]);
             }
         }
     }
@@ -153,11 +153,11 @@ class NewTopup extends Controller
             Log::error("NewTopup query exception: " . $ex->getMessage());
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip::newtopup.query.error'), 'data' => []];
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip::newtopup.query.error')]);
             }
         }
     }
@@ -182,11 +182,11 @@ class NewTopup extends Controller
             Log::error("NewTopup history exception: " . $ex->getMessage());
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip::newtopup.history.error'), 'data' => []];
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip::newtopup.history.error')]);
             }
         }
     }
