@@ -339,5 +339,4 @@ class WebTopup extends Controller
             return ['error' => 3, 'message' => '', 'data' => []];
         }
     }
-    */
 }
