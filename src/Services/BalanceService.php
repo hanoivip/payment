@@ -14,7 +14,7 @@ class BalanceService implements IBalance
      * Truy xuất tất cả các loại tài khoản của ng chơi.
      * 
      * @param number $uid
-     * @return Balance
+     * @return Balance[]
      */
     public function getInfo($uid)
     {

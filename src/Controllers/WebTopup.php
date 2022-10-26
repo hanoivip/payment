@@ -84,7 +84,7 @@ class WebTopup extends Controller
     
     public function method(Request $request)
     {
-        
+        throw new Exception("Webtopup implement method method...");
     }
     
     public function topupDone(Request $request)
@@ -174,13 +174,14 @@ class WebTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("WebTopup payment callback exception:" . $ex->getMessage());
+            dispatch(new CheckPendingReceipt($userId, $receipt))->delay(300);
             if ($request->ajax())
             {
-                return ['error' => 99, 'message' => $ex->getMessage(), 'data' => []];
+                return ['error' => 99, 'message' => 'We are trying our best to finish your payment.', 'data' => []];
             }
             else
             {
-                return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
+                return view('hanoivip::webtopup-failure', ['message' => 'We are trying our best to finish your payment.']);
             }
         }
     }
@@ -267,6 +268,10 @@ class WebTopup extends Controller
             }
         }
     }
+    /**
+     * @deprecated
+     * @param unknown $request
+     */ 
     public function quickTopup(Request $request)
     {
         $methods = config('payment.webtopup.methods', []);
@@ -300,7 +305,8 @@ class WebTopup extends Controller
         }
     }
 	// pay with credit, at once
-	public function quickPayment(Request $request)
+	// TODO: QuickPaymentScreen: make order & request quick payemnt
+    public function quickRecharge(Request $request)
     {
         $userId = Auth::user()->getAuthIdentifier();
         $order = $request->input('order');
@@ -333,4 +339,5 @@ class WebTopup extends Controller
             return ['error' => 3, 'message' => '', 'data' => []];
         }
     }
+    */
 }
