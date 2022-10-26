@@ -159,7 +159,7 @@ class WebTopup extends Controller
                 }
                 else 
                 {
-                    dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+                    dispatch(new CheckPendingReceipt($userId, $receipt));
                     if ($request->ajax())
                     {
                         return ['error' => 0, 'message' => 'success', 'data' => []];
@@ -269,6 +269,8 @@ class WebTopup extends Controller
         }
     }
     /**
+     * App quick topup
+     * - No next route
      * @param unknown $request
      */ 
     public function quickTopup(Request $request)
@@ -281,7 +283,7 @@ class WebTopup extends Controller
         else
         {
             $userId = Auth::user()->getAuthIdentifier();
-            $order = "WebTopup@" . Str::random(6);
+            $order = "AppTopup@" . Str::random(6);
             $method = $methods[0];
             try
             {
