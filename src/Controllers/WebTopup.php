@@ -174,7 +174,7 @@ class WebTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("WebTopup payment callback exception:" . $ex->getMessage());
-            dispatch(new CheckPendingReceipt($userId, $receipt))->delay(300);
+            dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
             if ($request->ajax())
             {
                 return ['error' => 99, 'message' => 'We are trying our best to finish your payment.', 'data' => []];
