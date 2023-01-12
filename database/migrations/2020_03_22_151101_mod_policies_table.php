@@ -10,7 +10,7 @@ class ModPoliciesTable extends Migration
     {
         Schema::table('policies', function (Blueprint $table) {
             $table->integer('type')->default(0);
-            $table->string('params')->default(null);
+            $table->string('params')->nullable(true);
             $table->integer('target_uid')->default(0);
             $table->dropColumn('policy_name');
         });

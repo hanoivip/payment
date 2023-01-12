@@ -9,4 +9,8 @@ return [
     'PaymentRefund' =>'Hoàn tiền',
     'CreditMethod' => 'Thanh toán bằng webcoin',
     'WebTopup' => 'Nạp webcoin',
+    'Ios' => 'Mua ngày dùng Ios',
+    //
+    'not-enough-money' => 'Không đủ coin trong tài khoản',
+    'process-error' => 'Xử lý coin lỗi, vui lòng thử lại'
 ];
