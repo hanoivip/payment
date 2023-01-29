@@ -271,7 +271,6 @@ class WebTopup extends Controller
     /**
      * App quick topup
      * - No next route
-     * @param unknown $request
      */ 
     public function quickTopup(Request $request)
     {

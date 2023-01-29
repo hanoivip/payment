@@ -10,6 +10,7 @@ return [
     'CreditMethod' => 'Thanh toán bằng webcoin',
     'WebTopup' => 'Nạp webcoin',
     'Ios' => 'Mua ngày dùng Ios',
+    'IosCostRefund' => 'Hoàn phí mua ngày Ios',
     //
     'not-enough-money' => 'Không đủ coin trong tài khoản',
     'process-error' => 'Xử lý coin lỗi, vui lòng thử lại'

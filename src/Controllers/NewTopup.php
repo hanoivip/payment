@@ -77,7 +77,7 @@ class NewTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("NewTopup start payment exception: " . $ex->getMessage());
-            //Log::error(">>>>>>>> " . $ex->getTraceAsString());
+            Log::error(">>>>>>>> " . $ex->getTraceAsString());
             if ($request->ajax())
             {
                 return ['error' => 99, 'message' => __('hanoivip::newtopup.choose.error'), 'data' => []];
@@ -121,6 +121,7 @@ class NewTopup extends Controller
         catch (Exception $ex)
         {
             Log::error("NewTopup payment exception: " . $ex->getMessage());
+            Log::error(">>>>>>>> " . $ex->getTraceAsString());
             $lock->release();
             if ($request->ajax())
             {
