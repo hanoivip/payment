@@ -197,9 +197,9 @@ class TopupService
         $route = GateFacade::routing($type, $dvalue);
         /** @var IRoutingResult $route */
         if (!$route->isAvaiable())
-            return __('hanoivip::topup.channel-maintain');
+            return __('hanoivip.payment::topup.channel-maintain');
         if ($route->isBusy())
-            return __('hanoivip::topup.channel-unavailable');
+            return __('hanoivip.payment::topup.channel-unavailable');
         // Save temp data
         $oldRoute = $this->getTopupSession($uid);
         if (!empty($oldRoute))
@@ -236,7 +236,7 @@ class TopupService
     {
         $route = $this->getTopupSession($uid);
         if (empty($route))
-            return __('hanoivip::topup.timeout');
+            return __('hanoivip.payment::topup.timeout');
         $session = $route['session'];
         $type = $route['type'];
         $dvalue = $route['dvalue'];
@@ -297,14 +297,14 @@ class TopupService
     {
         $route = $this->getTopupSession($uid);
         if (empty($route))
-            return __('hanoivip::topup.timeout');
+            return __('hanoivip.payment::topup.timeout');
         Log::debug('TopupService recaptcha current route info:' . print_r($route, true));
         $session = $route['session'];
         $ret = GateFacade::refresh($session);
         if (!$ret['available'])
-            return __('hanoivip::topup.channel-maintain');
+            return __('hanoivip.payment::topup.channel-maintain');
         if ($ret['busy'])
-            return __('hanoivip::topup.channel-unavailable');
+            return __('hanoivip.payment::topup.channel-unavailable');
         if (empty($ret['pid']))
             throw new Exception('Topup partner ID not determined yet!');
         return $ret;

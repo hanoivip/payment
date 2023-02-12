@@ -4,7 +4,7 @@
 
 @section('content')
 
-<p>{{__('hanoivip::webtopup.success')}}</p>
+<p>{{__('hanoivip.payment::webtopup.success')}}</p>
 
 <a href="{{ route('recharge') }}"><button>Chuyển xu</button></a>
 

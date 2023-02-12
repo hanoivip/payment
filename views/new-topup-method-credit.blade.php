@@ -15,10 +15,10 @@
 	@foreach ($data as $info)
 		<p>Loại tk: {{$info->type}}, số dư: {{$info->balance}}</p>
 	@endforeach
-	<button type="submit">{{__('hanoivip::payment.methods.next')}}</button>
+	<button type="submit">{{__('hanoivip.payment::payment.methods.next')}}</button>
 </form>
 @else
-	<p>{{__('hanoivip::payment.credit.no-point')}}</p>
+	<p>{{__('hanoivip.payment::payment.credit.no-point')}}</p>
 @endif
 
 @endsection

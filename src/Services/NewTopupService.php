@@ -26,7 +26,7 @@ class NewTopupService
      * @throws Exception
      * @return \stdClass[]
      */
-    public function getMethods()
+    public function getMethods($client = null)
     {
         $all = config('payment.methods', []);
         $methods = [];
@@ -47,6 +47,29 @@ class NewTopupService
                 Log::error("NewTopup method " . $cfg['name'] . " missing implementation? " . $cfg['service']);
                 continue;
             }
+        }
+        // filter by client
+        if (!empty($client))
+        {
+            $ret = [];
+            $methodsByClient = config("payment.$client", []);
+            if (empty($methodsByClient))
+            {
+                Log::error("Payment methods by client is empty?");
+            }
+            else 
+            {
+                foreach ($methodsByClient as $method)
+                {
+                    if (!isset($methods[$method]))
+                    {
+                        Log::error("Payment missing $method config?");
+                        continue;
+                    }
+                    $ret[$method] = $methods[$method];
+                }
+            }
+            return $ret;
         }
         return $methods;
     }
@@ -184,10 +207,11 @@ class NewTopupService
     /**
      * Trigger web payment flow
      * @param string $order
+     * @param string $client
      */
-    public function pay($order, $next = null)
+    public function pay($order, $next = null, $client = null)
     {
-        return response()->redirectToRoute('newtopup', ['order' => $order, 'next' => $next]);
+        return response()->redirectToRoute('newtopup', ['order' => $order, 'next' => $next, 'client' => $client]);
     }
     /**
      * View transacions history

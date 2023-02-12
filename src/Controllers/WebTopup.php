@@ -41,7 +41,7 @@ class WebTopup extends Controller
         $methods = config('payment.webtopup.methods', []);
         if (empty($methods))
         {
-            return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.no-method')]);
+            return view('hanoivip::webtopup-failure', ['message' => __('hanoivip.payment::webtopup.no-method')]);
         }
         else if (count($methods) > 1)
         {
@@ -71,13 +71,13 @@ class WebTopup extends Controller
                 }
                 else
                 {
-                    return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.log-fail')]);
+                    return view('hanoivip::webtopup-failure', ['message' => __('hanoivip.payment::webtopup.log-fail')]);
                 }
             }
             catch (Exception $ex)
             {
                 Log::error("Webtopup index exception:" + $ex->getMessage());
-                return view('hanoivip::webtopup-failure', ['message' => __('hanoivip::webtopup.exception')]);
+                return view('hanoivip::webtopup-failure', ['message' => __('hanoivip.payment::webtopup.exception')]);
             }
         }
     }

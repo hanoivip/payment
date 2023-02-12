@@ -112,9 +112,9 @@ class TopupController extends Controller
         try 
         {
             if ($request->ajax())
-                return ['html' => __('hanoivip::topup.rule')];
+                return ['html' => __('hanoivip.payment::topup.rule')];
             else
-                return view('topup-rule', ['html' =>  __('hanoivip::topup.rule')]);
+                return view('topup-rule', ['html' =>  __('hanoivip.payment::topup.rule')]);
         } catch (Exception $ex) {
             Log::error("Get topup rule error: " . $ex->getMessage());
             abort(500);
@@ -127,7 +127,7 @@ class TopupController extends Controller
         {
             if ($request->ajax())
             {
-                return ['data' => __('hanoivip::topup')];
+                return ['data' => __('hanoivip.payment::topup')];
             }
             abort(404);
         }
@@ -140,13 +140,13 @@ class TopupController extends Controller
     
     public function jsTopup(Request $request)
     {
-        $lang = __('hanoivip::topup');
+        $lang = __('hanoivip.payment::topup');
         return view('hanoivip::jtopup', ['lang' => json_encode($lang)]);
     }
     
     public function jsHistory(Request $request)
     {
-        $lang = __('hanoivip::topup');
+        $lang = __('hanoivip.payment::topup');
         return view('hanoivip::jhistory', ['lang' => json_encode($lang)]);
     }
     
@@ -204,7 +204,7 @@ class TopupController extends Controller
         {
             Log::error('Topup prepare payment exception. Msg:' . $ex->getMessage());
             return view('hanoivip::topup_result',
-                ['error_message' => __('hanoivip::topup.system-error')]);
+                ['error_message' => __('hanoivip.payment::topup.system-error')]);
         }
     }
     
@@ -258,9 +258,9 @@ class TopupController extends Controller
         {
             Log::error('Topup payment exception. Msg:' . $ex->getMessage());
             if ($request->ajax())
-                return ['result' => ['error_message' => __('hanoivip::topup.system-error')]];
+                return ['result' => ['error_message' => __('hanoivip.payment::topup.system-error')]];
                 return view('hanoivip::topup_result',
-                    [ 'error_message' => __('hanoivip::topup.system-error') ]);
+                    [ 'error_message' => __('hanoivip.payment::topup.system-error') ]);
         }
     }
 }

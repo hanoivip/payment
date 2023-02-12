@@ -12,6 +12,6 @@
 <p>{{ $error_message }}</p>
 @endif
 
-<a href="{{ route('topup') }}">{{__('hanoivip::topup.ui.newtopupbtn')}}</button>
+<a href="{{ route('topup') }}">{{__('hanoivip.payment::topup.ui.newtopupbtn')}}</button>
 
 @endsection

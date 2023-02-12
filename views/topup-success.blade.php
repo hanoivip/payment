@@ -10,6 +10,6 @@
 <p>Topup success!</p>
 @endif
 
-<a href="{{ route('jtopup') }}">{{__('hanoivip::topup.ui.newtopupbtn')}}</button>
+<a href="{{ route('jtopup') }}">{{__('hanoivip.payment::topup.ui.newtopupbtn')}}</button>
 
 @endsection

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<p>{{__('hanoivip::webtopup.pending')}}</p>
+<p>{{__('hanoivip.payment::webtopup.pending')}}</p>
 
 <a href="{{ route('webtopup.query', ['trans' => $trans]) }}"><button>Cập nhật</button></a>
 

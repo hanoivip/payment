@@ -7,7 +7,7 @@ use Hanoivip\Payment\Models\Balance;
 use Illuminate\Support\Facades\Log;
 use Hanoivip\Payment\Contracts\IBalance;
 use Hanoivip\Events\Gate\UserFirstTopup;
-
+// TODO: define webcoin rate
 class BalanceService implements IBalance
 {
     /**
@@ -130,11 +130,11 @@ class BalanceService implements IBalance
             $list = explode(':', $mod->reason);
             if($list[0]=='Recharge')
             {
-                $reason = __('hanoivip::balance.' . $list[0]) . $list[3];
+                $reason = __('hanoivip.payment::balance.' . $list[0]) . $list[3];
             }
             else
             {
-                $reason = __('hanoivip::balance.' . $list[0]);
+                $reason = __('hanoivip.payment::balance.' . $list[0]);
                 if (isset($list[1]))
                     $reason = $reason . ' ' . $list[1];
             }

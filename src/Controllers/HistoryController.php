@@ -68,7 +68,7 @@ class HistoryController extends Controller
     
     public function jsTopup(Request $request)
     {
-        $lang = __('hanoivip::topup');
+        $lang = __('hanoivip.payment::topup');
         return view('hanoivip::jtopup', ['lang' => json_encode($lang)]);
     }
     

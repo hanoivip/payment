@@ -36,11 +36,11 @@ class PolicyController extends Controller
         $result = $this->policies->newSystemPolicy($type, $title, $startTime, $endTime, $params);
         if ($result === true)
         {
-            return view('hanoivip::admin.policy-result', ['message' => __('hanoivip::admin.policy.success')]);
+            return view('hanoivip::admin.policy-result', ['message' => __('hanoivip.payment::admin.policy.success')]);
         }
         else
         {
-            return view('hanoivip::admin.policy-result', ['error_message' => __('hanoivip::admin.policy.error' . $result)]);
+            return view('hanoivip::admin.policy-result', ['error_message' => __('hanoivip.payment::admin.policy.error' . $result)]);
         }
     }
     
@@ -49,8 +49,8 @@ class PolicyController extends Controller
         $pid = $request->get('pid');
         $result = $this->policies->delete($pid);
         if ($result === true)
-            return view('hanoivip::admin.policy-result', ['message' => __('hanoivip::admin.policy.del-success')]);
+            return view('hanoivip::admin.policy-result', ['message' => __('hanoivip.payment::admin.policy.del-success')]);
         else
-            return view('hanoivip::admin.policy-result', ['error_message' => __('hanoivip::admin.policy.del-error' . $result)]);
+            return view('hanoivip::admin.policy-result', ['error_message' => __('hanoivip.payment::admin.policy.del-error' . $result)]);
     }
 }
