@@ -32,10 +32,10 @@ class TopupServiceProvider extends ServiceProvider
             __DIR__.'/../lang' => resource_path('lang/vendor/hanoivip'),
         ]);
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadViewsFrom(__DIR__ . '/../views', 'hanoivip.payment');
+        $this->loadViewsFrom(__DIR__ . '/../views', 'hanoivip');
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
-        $this->loadTranslationsFrom( __DIR__.'/../lang/', 'hanoivip');
+        $this->loadTranslationsFrom( __DIR__.'/../lang/', 'hanoivip.payment');
         //$this->mergeConfigFrom( __DIR__.'/../config/payment.php', 'payment');
     }
 }
