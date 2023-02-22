@@ -2,12 +2,13 @@
 
 namespace Hanoivip\Payment\Services;
 
+use AmrShawky\LaravelCurrency\Facade\Currency;
 use Hanoivip\Payment\Models\BalanceMod;
 use Hanoivip\Payment\Models\Balance;
 use Illuminate\Support\Facades\Log;
 use Hanoivip\Payment\Contracts\IBalance;
-use Hanoivip\Events\Gate\UserFirstTopup;
-// TODO: define webcoin rate
+use Exception;
+
 class BalanceService implements IBalance
 {
     /**
@@ -47,8 +48,6 @@ class BalanceService implements IBalance
             $balance->balance_type = $type;
             $balance->balance = $value;
             $balance->save();
-            if ($type == 0)
-                event(new UserFirstTopup($uid, $value));
         }
         else
         {
@@ -156,5 +155,40 @@ class BalanceService implements IBalance
         return false;
     }
 
-
+    public function addCurrency($uid, $amount, $currency, $reason = "", $type = 0)
+    {
+        if (empty($amount) || empty($currency))
+        {
+            throw new Exception("Balance amount and/or currency invalid!");
+        }
+        // exchange: $amount => USD * 100
+        $coin = intval(Currency::convert()
+        ->from($currency)
+        ->to('USD')
+        ->amount($amount)
+        ->get() * 100);
+        $balance = Balance::where('user_id', $uid)
+        ->where('balance_type', $type)
+        ->first();
+        if (empty($balance))
+        {
+            $balance = new Balance();
+            $balance->user_id = $uid;
+            $balance->balance_type = $type;
+            $balance->balance = $coin;
+            $balance->save();
+        }
+        else
+        {
+            $balance->balance += $coin;
+            $balance->save();
+        }
+        $log = new BalanceMod();
+        $log->user_id = $uid;
+        $log->balance_type = $type;
+        $log->balance = $coin;
+        $log->reason = $reason;
+        $log->save();
+        return true;
+    }
 }
