@@ -4,6 +4,7 @@ namespace Hanoivip\Payment\Commands;
 
 use Illuminate\Console\Command;
 use Hanoivip\Payment\Facades\BalanceFacade;
+use Hanoivip\User\Facades\UserFacade;
 
 class TestBalance extends Command
 {
@@ -13,8 +14,18 @@ class TestBalance extends Command
     
     public function handle()
     {
-        $uid = $this->argument('uid');
+        $uidOrUsername = $this->argument('uid');
         $balance = $this->argument('balance');
-        BalanceFacade::add($uid, $balance, "Test from command");
+        $user = UserFacade::getUserCredentials($uidOrUsername);
+        if (!empty($user))
+        {
+            BalanceFacade::add($user->id, $balance, "Test balance command");
+            $this->info("ok");
+        }
+        else
+        {
+            $this->error("user not found");
+        }
+        
     }
 }

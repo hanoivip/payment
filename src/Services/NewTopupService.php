@@ -142,6 +142,7 @@ class NewTopupService
         }
         $service = $this->getMethodImplement($record->method);
         /** @var IPaymentMethod $service */
+        // TODO: validate param here?
         $result = $service->request($record, $params);
         $service->endTrans($transId);
         $this->transactions->saveResult($record, $result);

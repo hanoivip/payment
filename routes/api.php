@@ -28,6 +28,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
 	// Quick topup
     Route::any('/webtopup', 'WebTopup@quickTopup');
 	Route::any('/webtopup/done', 'WebTopup@topupDone');
+	Route::any('/pay/quick/topup', 'WebTopup@quickTopup');
 	//Route::any('/pay/quick/recharge', 'WebTopup@quickRecharge');
 });
 
