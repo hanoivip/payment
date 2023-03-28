@@ -42,7 +42,6 @@ class NewTopup extends Controller
             {
                 // just forward with default method
                 $method = array_keys($methods)[0];
-                //Log::error("......... $method..........");
                 $result = $this->service->preparePayment($order, $method, $next);
                 if ($request->ajax())
                 {
@@ -86,7 +85,9 @@ class NewTopup extends Controller
     {
         try 
         {
-            $method = $request->input('method');
+            $method = 'credit';
+            if ($request->has('method'))
+                $method = $request->input('method');
             $order = $request->input('order');
             $next = $request->input('next');
             $result = $this->service->preparePayment($order, $method, $next);
