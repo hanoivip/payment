@@ -19,7 +19,7 @@ class TestBalance extends Command
         $user = UserFacade::getUserCredentials($uidOrUsername);
         if (!empty($user))
         {
-            BalanceFacade::add($user->id, $balance, "Test balance command");
+            BalanceFacade::add($user->id, $balance, "admin-command");
             $this->info("ok");
         }
         else
