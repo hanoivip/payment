@@ -29,6 +29,56 @@ class BalanceService implements IBalance
         $balances = Balance::where('user_id', $uid)->get();
         return $balances;
     }
+    /**
+     * convert between currency
+     * beware: webcoin = USD * 100
+     * 
+     * @param number $value
+     * @param string $currency
+     * @param string $targetCurrency
+     * @throws Exception
+     * @return number
+     */
+    public function convert($value, $currency, $targetCurrency)
+    {
+        if ($value < 0)
+        {
+            throw new Exception("Convert value must be equal greater than 0");
+        }
+        if (strtoupper($currency) == strtoupper($targetCurrency))
+        {
+            return $value;
+        }
+        $sourceCurrency = $currency;
+        $sourceValue = $value;
+        if (strtoupper($currency) == 'WEBCOIN')
+        {
+            $sourceCurrency = 'USD';
+            $sourceValue = $value / 100;
+        }
+        $multiple100 = false;
+        if (strtoupper($targetCurrency) == 'WEBCOIN')
+        {
+            $targetCurrency = 'USD';
+            $multiple100 = true;
+        }
+        // convert
+        $targetValue = Currency::convert()
+            ->from($sourceCurrency)
+            ->to($targetCurrency)
+            ->amount($sourceValue)
+            ->get();
+        if ($multiple100)
+        {
+            $targetValue = $targetValue * 100;
+        }
+        return $targetValue;
+    }
+    
+    public function convertWebcoin($value, $currency)
+    {
+        return $this->convert($value, $currency, 'webcoin');
+    }
     
     /**
      * Convert amount of money (w/wo currency) into webcoin

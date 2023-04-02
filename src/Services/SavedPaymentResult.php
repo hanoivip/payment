@@ -48,6 +48,11 @@ class SavedPaymentResult implements IPaymentResult
     {
         return $this->result['amount'];
     }
+    
+    public function getCurrency()
+    {
+        return $this->result['currency'];
+    }
 
     
 }
