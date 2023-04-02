@@ -4,9 +4,9 @@
 
 @section('content')
 
-<a href="{{route('ecmin.income.today')}}">Doanh số trong ngày</a>
+<a href="{{route('ecmin.income.today')}}">Today income</a>
 
-<a href="{{route('ecmin.income.thisMonth')}}">Doanh số trong tháng</a>
+<a href="{{route('ecmin.income.thisMonth')}}">This month income</a>
 
 <form method="post" action="{{route('ecmin.income.byTime')}}">
 	{{csrf_field()}}

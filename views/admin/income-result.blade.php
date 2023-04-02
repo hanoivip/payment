@@ -4,7 +4,7 @@
 
 @section('content')
 
-Doanh số: {{$sum}} vnd
+Doanh số: {{$sum}}
 
 
 @endsection

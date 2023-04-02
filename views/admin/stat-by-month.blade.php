@@ -10,6 +10,6 @@
 	<button type="submit">OK</button>
 </form>
 
-Doanh số: {{$sum}} vnd
+Income: {{$sum}}
 
 @endsection
