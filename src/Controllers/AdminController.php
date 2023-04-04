@@ -95,7 +95,7 @@ class AdminController extends Controller
         return view('hanoivip::admin.income-result', ['sum' => $sum]);
     }
     
-    public function thisMonth()
+    public function thisWeek()
     {
         $curWeek = date('W', time());
         $key = "income_week_" . $curWeek;
