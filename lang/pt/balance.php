@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'Recharge' => 'Old recharge',
-    'TopupPolicy' => 'Sale Off',
-    'Topup' => 'Old topup',
-    'Proceed' => 'Proceed Act',
-    'PaymentChanges' => 'Payment changes',
-    'PaymentRefund' =>'Payment refund',
-    'CreditMethod' => 'Pay by credit',
-    'Ios' => 'Buy iOS usage days',
-    'IosCostRefund' => 'Ios Purchase Refund',
-    'admin-command' => 'Admin add credits',
-    'not-enough-money' => 'Not enough web coin',
-    'process-error' => 'Coin processing error. Please retry again.'
+    'Recharge' => 'Recarga antiga',
+    'TopupPolicy' => 'Venda',
+    'Topup' => 'Recarga antiga',
+    'Proceed' => 'Prosseguir Ato',
+    'PaymentChanges' => 'Alterações de pagamento',
+    'PaymentRefund' =>'Reembolso do pagamento',
+    'CreditMethod' => 'Pagar por webcoin',
+    'Ios' => 'Comprar dias de uso do iOS',
+    'IosCostRefund' => 'Reembolso de compra Ios',
+    'admin-command' => 'Admin adicionar créditos',
+    'not-enough-money' => 'Moeda da web insuficiente',
+    'process-error' => 'Erro no processamento da moeda. Tente novamente.'
 ];

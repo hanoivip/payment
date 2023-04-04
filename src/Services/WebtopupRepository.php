@@ -2,12 +2,8 @@
 
 namespace Hanoivip\Payment\Services;
 
-use Hanoivip\Payment\Models\Transaction;
-use Illuminate\Support\Str;
-use Hanoivip\PaymentMethodContract\IPaymentResult;
-use Hanoivip\Payment\Models\WebtopupLogs;
 use Hanoivip\PaymentMethodTsr\TsrTransaction;
-use Illuminate\Support\Facades\Log;
+use Hanoivip\Payment\Models\WebtopupLogs;
 
 class WebtopupRepository
 {
