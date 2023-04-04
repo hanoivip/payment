@@ -24,7 +24,7 @@ class UserTopupHandler
         $this->statistics->stat("income_$curMonth", 0, $event->coin);
         //this week
         $curWeek = date('W', time());
-        $this->statistics->stat("income_$curWeek", 0, $event->coin);
+        $this->statistics->stat("income_week_$curWeek", 0, $event->coin);
         //this user
         $this->statistics->stat("income_user", $event->uid, $event->coin);
         //today

@@ -16,6 +16,7 @@ use Hanoivip\Payment\Models\WebtopupLogs;
 /**
  *
  * Web topup with prepaid card
+ * Quick flow
  * @author hanoivip
  *
  */

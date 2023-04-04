@@ -6,7 +6,7 @@
 
 <form method="post" action="{{route('ecmin.stats.bymonth')}}">
 	{{csrf_field()}}
-	<input name="month" id="month"/>
+	<input name="month" id="month" placeholder="Ex: 202301"/>
 	<button type="submit">OK</button>
 </form>
 

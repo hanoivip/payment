@@ -5,7 +5,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Hanoivip\Payment\Models\Transaction;
 use Hanoivip\Payment\Services\NewTopupService;
 use Hanoivip\Payment\Services\StatisticService;
 use Hanoivip\Payment\Jobs\CheckPendingReceipt;
@@ -13,7 +12,6 @@ use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Events\Gate\UserTopup;
 use Hanoivip\Payment\Models\WebtopupLogs;
-use phpDocumentor\Reflection\Element;
 
 /**
  *
@@ -90,6 +88,17 @@ class AdminController extends Controller
     {
         $curMonth = date('Ym', time());
         $key = "income_" . $curMonth;
+        $stats = $this->stats->getStatistics($key);
+        $sum = 0;
+        if ($stats->isNotEmpty())
+            $sum = $stats->first()->total;
+        return view('hanoivip::admin.income-result', ['sum' => $sum]);
+    }
+    
+    public function thisMonth()
+    {
+        $curWeek = date('W', time());
+        $key = "income_week_" . $curWeek;
         $stats = $this->stats->getStatistics($key);
         $sum = 0;
         if ($stats->isNotEmpty())

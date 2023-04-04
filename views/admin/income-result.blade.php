@@ -1,10 +1,10 @@
 @extends('hanoivip::admin.layouts.admin')
 
-@section('title', 'Kết quả')
+@section('title', 'Revenue')
 
 @section('content')
 
-Doanh số: {{$sum}}
+Revenue: {{$sum}}
 
 
 @endsection
