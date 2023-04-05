@@ -10,6 +10,7 @@ return [
     'CreditMethod' => 'Pay by credit',
     'Ios' => 'Buy iOS usage days',
     'IosCostRefund' => 'Ios Purchase Refund',
+    'WebTopup' => 'Web topup',
     'admin-command' => 'Admin add credits',
     'not-enough-money' => 'Not enough web coin',
     'process-error' => 'Coin processing error. Please retry again.'
