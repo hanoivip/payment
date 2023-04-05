@@ -52,7 +52,7 @@ class CheckPendingReceipt implements ShouldQueue
                 else 
                 {
                     event(new UserTopup($this->userId, 0, $result->getAmount(), $this->receipt));
-                    BalanceFacade::add($this->userId, $result->getAmount(), "WebTopup:" . $this->receipt);
+                    BalanceFacade::add($this->userId, $result->getAmount(), "WebTopup");
                 }
             }
             else 
