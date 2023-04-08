@@ -3,13 +3,10 @@
 namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
+use Hanoivip\Payment\Services\BalanceService;
+use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Exception;
-use Hanoivip\Payment\Services\BalanceService;
-use Hanoivip\Payment\Services\StatisticService;
-use Hanoivip\Payment\Services\NewTopupService;
 
 /**
  *
@@ -19,8 +16,6 @@ class HistoryController extends Controller
 {
     protected $balance;
     
-    protected $stats;
-    
     protected $topup;
     
     public function __construct(
@@ -28,7 +23,6 @@ class HistoryController extends Controller
         NewTopupService $topup)
     {
         $this->balance = $balance;
-        $this->stats = $stats;
         $this->topup = $topup;
     }
     

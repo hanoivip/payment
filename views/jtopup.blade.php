@@ -1,6 +1,6 @@
 @extends('hanoivip::layouts.app')
 
-@section('title', 'Nạp thẻ (bước 1)')
+@section('title', 'Payment history')
 
 @section('content')
 

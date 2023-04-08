@@ -1,34 +1,45 @@
 @extends('hanoivip::admin.layouts.admin')
 
-@section('title', 'Lịch sử nạp thẻ - Webtopup')
+@section('title', 'Webtopup history')
 
 @section('content')
 
 <style type="text/css">
 	table tr td{
 		border: 1px solid;
-	}=
+	}
+	table tr th{
+		border: 1px solid;
+	}
 </style>
 
 @if (empty($submits))
-<p>Chưa nạp lần nào!</p>
+<p>Have no submitted card!</p>
 @else
 
 <table>
+<tr>
+	<th>Status</th>
+	<th>Card password</th>
+	<th>User choosen</th>
+	<th>User penalty</th>
+	<th>Real amount</th>
+	<th>Time</th>
+</tr>
 @foreach ($submits as $submit)
 <tr>
 	@switch($submit->status)
 		@case(0)
-			<td>Thành công</td>
+			<td>Valid</td>
 			@break
 		@case(1)
-			<td>Lỗi</td>
+			<td>Invalid</td>
 			@break
 		@case(2)
-			<td>Trễ</td>
+			<td>Delay</td>
 			@break
 		@case(3)
-			<td>Sai m.giá</td>
+			<td>Valid (pen)</td>
 			@break
 	@endswitch
     <td>{{$submit->password}}</td>
