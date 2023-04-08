@@ -4,6 +4,10 @@
 
 @section('content')
 
+<script type="text/javascript">
+	var topup_langs = {!! $lang !!};
+ 	console.log(topup_langs);
+</script>
 <div id="my-payment-topup-history"></div>
 <div id="my-payment-recharge-history"></div>
 

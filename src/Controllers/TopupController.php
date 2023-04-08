@@ -36,7 +36,6 @@ class TopupController extends Controller
     
     public function topupHistory(Request $request)
     {
-        //return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
         $page = 1;
         if ($request->has('page'))
             $page = $request->input('page');
@@ -162,7 +161,7 @@ class TopupController extends Controller
             $message = $request->input('message');
         return view('hanoivip::topup-success', ['message' => $message]);
     }
-    
+    /*
     public function topupUI2(Request $request)
     {
         $uid = Auth::user()->getAuthIdentifier();
@@ -262,5 +261,5 @@ class TopupController extends Controller
                 return view('hanoivip::topup_result',
                     [ 'error_message' => __('hanoivip.payment::topup.system-error') ]);
         }
-    }
+    }*/
 }

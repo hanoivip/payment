@@ -6,11 +6,14 @@ Route::middleware([
     'auth:web'
 ])->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // new gate version
-    Route::get('/topup/step1', 'TopupController@topupUI2')->name('topup');
-    Route::get('/topup/step2', 'TopupController@selectType')->name('topup.by.type');
-    Route::post('/topup/result', 'TopupController@topup2')->name('webTopup');
-    Route::get('/topup/recaptcha', 'TopupController@recaptcha')->name('topup.recaptcha');
-    Route::get('/topup/cancel', 'TopupController@cancel')->name('topup.cancel');
+    Route::get('/topup/step1', function (){
+        return response()->redirectToRoute('webtopup');
+    })->name('topup');
+    //Route::get('/topup/step1', 'TopupController@topupUI2')->name('topup');
+    //Route::get('/topup/step2', 'TopupController@selectType')->name('topup.by.type');
+    //Route::post('/topup/result', 'TopupController@topup2')->name('webTopup');
+    //Route::get('/topup/recaptcha', 'TopupController@recaptcha')->name('topup.recaptcha');
+    //Route::get('/topup/cancel', 'TopupController@cancel')->name('topup.cancel');
     // reactjs UI
     Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
     Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');

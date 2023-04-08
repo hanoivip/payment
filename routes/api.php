@@ -13,7 +13,6 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     // Lịch sử chung
     Route::any('/topup/history', 'TopupController@history');
     // Lịch sử nạp
-    // Route::any('/topup/historyP', 'TopupController@topupHistory');
     Route::any('/topup/historyP', 'WebTopup@topupHistory');
     // Lịch sử chuyển xu
     Route::any('/topup/historyR', 'TopupController@rechargeHistory');

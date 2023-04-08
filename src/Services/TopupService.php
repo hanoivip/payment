@@ -3,8 +3,6 @@
 namespace Hanoivip\Payment\Services;
 
 use Carbon\Carbon;
-use Hanoivip\GateClientNew\Event\DelayCard;
-use Hanoivip\GateClientNew\Facade\GateFacade;
 use Hanoivip\Payment\Models\Submission;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -24,10 +22,10 @@ class TopupService
     /**
      * Lấy về trạng thái của cổng nạp thẻ
      * - Có thể tự cache
-     * 
+     * @deprecated
      */
     public function getGateStatus()
-    {
+    {/*
         $key = "GateStatus";
         if (Cache::has($key))
             return Cache::get($key);
@@ -40,7 +38,7 @@ class TopupService
         catch (Exception $e) 
         {
             Log::error("TopupService check gate status error: " . $e->getMessage());
-        }   
+        }*/   
     }
     /**
      * Lấy các thẻ người chơi đc nạp
@@ -193,9 +191,8 @@ class TopupService
      * @return array|string Param array need for payment, String message if fail
      */
     public function prepareByType($uid, $type, $dvalue)
-    {
+    {/*
         $route = GateFacade::routing($type, $dvalue);
-        /** @var IRoutingResult $route */
         if (!$route->isAvaiable())
             return __('hanoivip.payment::topup.channel-maintain');
         if ($route->isBusy())
@@ -208,7 +205,7 @@ class TopupService
             $this->cancel($uid);
         }
         $this->saveTopupSession($uid, $route->toArray());
-        return $route->toArray();
+        return $route->toArray();*/
     }
     
     protected function clearTopupSession($uid)
@@ -231,9 +228,12 @@ class TopupService
         $expires = Carbon::now()->addMinutes(5);
         Cache::add($key, $route, $expires);
     }
-    
+    /**
+     * @deprecated
+     * @return string|array|NULL|string|\Hanoivip\Payment\Models\Submission
+     */
     public function prerouted($uid, $params)
-    {
+    {/*
         $route = $this->getTopupSession($uid);
         if (empty($route))
             return __('hanoivip.payment::topup.timeout');
@@ -264,7 +264,6 @@ class TopupService
         $card->password = $password;
         $card->captcha = $captcha;
         $result = GateFacade::prepaid($session, $card, $mapping);
-        /** @var \Hanoivip\GateClientNew\ITopupResult $result */
         $sub->success = $result->isSuccess();
         $sub->delay = $result->isDelay();
         $sub->message = $result->getExplainMessage();
@@ -285,16 +284,18 @@ class TopupService
             $this->setLastErrorTs($uid);
         }
         $this->clearTopupSession($uid);
-        return $sub;
+        return $sub;*/
     }
     
     public function getWrongValueCutoff()
     {
         return config('payment.declare_wrong_cutoff', 0);
     }
-    
+    /**
+     * @deprecated
+     */
     public function recaptcha($uid)
-    {
+    {/*
         $route = $this->getTopupSession($uid);
         if (empty($route))
             return __('hanoivip.payment::topup.timeout');
@@ -307,22 +308,20 @@ class TopupService
             return __('hanoivip.payment::topup.channel-unavailable');
         if (empty($ret['pid']))
             throw new Exception('Topup partner ID not determined yet!');
-        return $ret;
+        return $ret;*/
     }
-    
+    /**
+     * @deprecated
+     * @return boolean
+     */
     public function cancel($uid)
-    {
+    {/*
         $route = $this->getTopupSession($uid);
         if (empty($route))
             return false;
         $session = $route['session'];
         GateFacade::cancel($session);
         $this->clearTopupSession($uid);
-        return true;
-    }
-    
-    public function handle(DelayCard $event)
-    {
-        return $this->callback($event->mapping, $event->value, $event->turnFailed);
+        return true;*/
     }
 }

@@ -4,6 +4,7 @@ namespace Hanoivip\Payment\Services;
 
 use Hanoivip\PaymentMethodTsr\TsrTransaction;
 use Hanoivip\Payment\Models\WebtopupLogs;
+use Illuminate\Support\Facades\Log;
 
 class WebtopupRepository
 {
@@ -61,7 +62,7 @@ class WebtopupRepository
                         $objects[] = $obj;
                 }
                 $total = WebtopupLogs::where('user_id', $userId)->count();
-                return [$objects, ceil($total / 10), $page];
+                return [$objects, floor($total / 10), $page];
             }
         }
     }

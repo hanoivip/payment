@@ -31,4 +31,10 @@ return [
     'rule' => '<br/>
 <p>1. You have to choose the card value, if we ask </p> <br/>
 <p>2. If you chosen wrong card value, you will receive only about 0-50% of your card value</p><br/>',
+    'status' => [
+        0 => 'Valid',
+        1 => 'Invalid',
+        2 => 'Delay',
+        3 => 'Valid (pen 50%)',
+    ]
 ];

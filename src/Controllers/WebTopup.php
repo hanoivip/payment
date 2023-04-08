@@ -194,7 +194,6 @@ class WebTopup extends Controller
     {
         try
         {
-            //Log::error("Webtopup .......");
             $userId = Auth::user()->getAuthIdentifier();
             $page = 0;
             if ($request->has('page'))
