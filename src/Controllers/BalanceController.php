@@ -27,5 +27,22 @@ class BalanceController extends Controller
         }
         return ['error' => 0, 'message' => 'success', 'data' => ['balances' => $info]];
     }
+    
+    public function modHistory(Request $request)
+    {
+        $page = 1;
+        if ($request->has('page'))
+            $page = $request->input('page');
+        $uid = Auth::user()->getAuthIdentifier();
+        $mods = $this->balance->getHistory($uid, $page);
+        if ($request->ajax())
+        {
+            return ['mods' => $mods[0], 'total_page' => $mods[1], 'current_page' => $mods[2]];
+        }
+        else
+        {
+            return view('hanoivip::recharge-history', ['mods' => $mods]);
+        }
+    }
 
 }

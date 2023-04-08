@@ -15,7 +15,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     // Lịch sử nạp
     Route::any('/topup/historyP', 'WebTopup@topupHistory');
     // Lịch sử chuyển xu
-    Route::any('/topup/historyR', 'TopupController@rechargeHistory');
+    Route::any('/topup/historyR', 'BalanceController@modHistory');
 });
 
 // New flow

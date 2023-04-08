@@ -15,7 +15,7 @@ Route::middleware([
     //Route::get('/topup/recaptcha', 'TopupController@recaptcha')->name('topup.recaptcha');
     //Route::get('/topup/cancel', 'TopupController@cancel')->name('topup.cancel');
     // reactjs UI
-    Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
+    //Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
     Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
     //Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
