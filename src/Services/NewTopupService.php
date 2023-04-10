@@ -155,7 +155,7 @@ class NewTopupService
         {
             return back()->withInput()->withErrors($validate);
         }
-        if ($validate === false || empty($validate))
+        if ($validate === false)
         {
             return Redirect::back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
         }
