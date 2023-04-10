@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Models\WebtopupLogs;
-use Hanoivip\Payment\Services\WebtopupDone;
 
 /**
  *
@@ -21,10 +20,8 @@ use Hanoivip\Payment\Services\WebtopupDone;
  * @author hanoivip
  *
  */
-class WebTopup extends Controller
+class WebTopup2 extends Controller
 {
-    use WebtopupDone;
-    
     private $service;
     
     private $logs;
@@ -56,9 +53,10 @@ class WebTopup extends Controller
             $userId = Auth::user()->getAuthIdentifier();
             $order = "WebTopup@" . Str::random(6);
             $method = $methods[0];
+            $next = 'webtopup.done';
             try
             {
-                $result = $this->service->preparePayment($order, $method);
+                $result = $this->service->preparePayment($order, $method, $next);
                 if ($this->logs->saveLog($userId, $result->getTransId()))
                 {
                     if ($request->ajax())
@@ -99,16 +97,94 @@ class WebTopup extends Controller
         ->first();
         if (empty($log))
         {
-            return view('hanoivip::webtopup-failure', ['message' => 'Receipt not exists']);
+            if ($request->ajax())
+            {
+                return ['error' => 3, 'message' => 'Receipt not exists', 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => 'Receipt not exists']);
+            }
         }
         if (!empty($log->callback))
         {
-            return view('hanoivip::webtopup-failure', ['message' => 'Receipt was done']);
+            if ($request->ajax())
+            {
+                return ['error' => 4, 'message' => 'Receipt was done', 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => 'Receipt was done']);
+            }
         }
         $log->callback = true;
         $log->save();
-        $result = $this->service->query($receipt);
-        return $this->onTopupDone($userId, $receipt, $result);
+        try 
+        {
+            $result = $this->service->query($receipt);
+            if (gettype($result) == 'string')
+            {
+                if ($request->ajax())
+                {
+                    return ['error' => 1, 'message' => $result, 'data' => []];
+                }
+                else
+                {
+                    return view('hanoivip::webtopup-failure', ['message' => $result]);
+                }
+            }
+            else 
+            {
+                if ($result->isPending())
+                {
+                    dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+                    if ($request->ajax())
+                    {
+                        return ['error' => 0, 'message' => 'pending', 'data' => ['trans' => $receipt]];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-pending', ['trans' => $receipt]);
+                    }
+                }
+                else if ($result->isFailure()) 
+                {
+                    if ($request->ajax())
+                    {
+                        return ['error' => 2, 'message' => $result->getDetail(), 'data' => []];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-failure', ['message' => $result->getDetail()]);
+                    }
+                }
+                else 
+                {
+                    dispatch(new CheckPendingReceipt($userId, $receipt));
+                    if ($request->ajax())
+                    {
+                        return ['error' => 0, 'message' => 'success', 'data' => []];
+                    }
+                    else
+                    {
+                        return view('hanoivip::webtopup-success');
+                    }
+                }
+            }
+        } 
+        catch (Exception $ex) 
+        {
+            Log::error("WebTopup payment callback exception:" . $ex->getMessage());
+            dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+            if ($request->ajax())
+            {
+                return ['error' => 99, 'message' => 'We are trying our best to finish your payment.', 'data' => []];
+            }
+            else
+            {
+                return view('hanoivip::webtopup-failure', ['message' => 'We are trying our best to finish your payment.']);
+            }
+        }
     }
     /**
      * Return for jhistory UI

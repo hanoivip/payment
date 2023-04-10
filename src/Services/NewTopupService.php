@@ -2,7 +2,10 @@
 
 namespace Hanoivip\Payment\Services;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Exception;
 use Hanoivip\PaymentMethodContract\IPaymentMethod;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
@@ -12,6 +15,8 @@ use Illuminate\Contracts\View\View;
 
 class NewTopupService
 {   
+    use WebtopupDone;
+    
     private $transactions;
     
     public function __construct(
@@ -104,7 +109,7 @@ class NewTopupService
      * @return IPaymentSession
      * @throws Exception
      */
-    public function preparePayment($order, $method, $next)
+    public function preparePayment($order, $method, $next = "")
     {
         $service = $this->getMethodImplement($method);
         /** @var IPaymentMethod $service */
@@ -141,8 +146,20 @@ class NewTopupService
             $params = array_merge($params, $secureParams);
         }
         $service = $this->getMethodImplement($record->method);
+        $validate = $service->validate($params);
+        if (gettype($validate) == 'string')
+        {
+            return back()->withInput()->withErrors(['error' => $validate]);
+        }
+        if (gettype($validate) == 'array' && !empty($validate))
+        {
+            return back()->withInput()->withErrors($validate);
+        }
+        if ($validate === false || empty($validate))
+        {
+            return Redirect::back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
+        }
         /** @var IPaymentMethod $service */
-        // TODO: validate param here?
         $result = $service->request($record, $params);
         $service->endTrans($transId);
         $this->transactions->saveResult($record, $result);
@@ -162,7 +179,10 @@ class NewTopupService
         }
         else 
         {
-            return $result;
+            // local processing result..
+            //return $result;
+            $userId = Auth::user()->getAuthIdentifier();
+            return $this->onTopupDone($userId, $transId, $result);
         }
     }
     /**
