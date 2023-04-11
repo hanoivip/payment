@@ -3,6 +3,7 @@
 namespace Hanoivip\Payment;
 
 use Hanoivip\Payment\Policies\GiftPolicy;
+use Hanoivip\Payment\Services\BalanceRequest;
 use Hanoivip\Payment\Services\BalanceService;
 use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Support\ServiceProvider;
@@ -12,12 +13,16 @@ class TopupServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind("BalanceService", BalanceService::class);
+        $this->app->bind("BalanceRequest", BalanceRequest::class);
         $this->app->bind("GiftPolicy", function ($app, $cfg) {
             return new GiftPolicy($cfg);
         });
         $this->commands([
+            \Hanoivip\Payment\Commands\BalanceAdd::class,
+            \Hanoivip\Payment\Commands\BalancePendings::class,
+            \Hanoivip\Payment\Commands\BalanceApprove::class,
+            \Hanoivip\Payment\Commands\BalanceReject::class,
             \Hanoivip\Payment\Commands\PolicyNew::class,
-            \Hanoivip\Payment\Commands\TestBalance::class,
             \Hanoivip\Payment\Commands\TestTopup::class,
         ]);
         $this->app->bind("LocalPaymentService", NewTopupService::class);

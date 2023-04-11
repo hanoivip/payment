@@ -3,6 +3,7 @@ namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Hanoivip\Payment\Services\NewTopupService;
@@ -12,6 +13,7 @@ use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Events\Gate\UserTopup;
 use Hanoivip\Payment\Models\WebtopupLogs;
+use Hanoivip\Payment\Services\BalanceRequest;
 
 /**
  *
@@ -25,15 +27,19 @@ class AdminController extends Controller
     protected $stats;
     
     protected $service;
+    
+    protected $request;
 
     public function __construct(
         WebtopupRepository $logs,
         StatisticService $stats,
-        NewTopupService $service)
+        NewTopupService $service,
+        BalanceRequest $request)
     {
         $this->logs = $logs;
         $this->stats = $stats;
         $this->service = $service;
+        $this->request = $request;
     }
 
     public function webtopupHistory(Request $request)
@@ -274,5 +280,28 @@ class AdminController extends Controller
                 return view('hanoivip::webtopup-failure', ['message' => $ex->getMessage()]);
             }
         }
+    }
+    
+    public function balanceRequest(Request $request)
+    {
+        $message = "";
+        $error = "";
+        $targetId = $request->input('tid');
+        if ($request->getMethod() == 'POST')
+        {
+            try
+            {
+                $gmId = Auth::user()->getAuthIdentifier();
+                $amount = $request->input('amount');
+                $reason = $request->input('reason');
+                $log = $this->request->request($gmId, $targetId, $reason, $amount);
+                $message = "get request, wait for approval";
+            }
+            catch (Exception $ex)
+            {
+                $error = $ex->getMessage();
+            }
+        }
+        return view('hanoivip::admin.balance-request', ['message' => $message, 'error_message' => $error, 'tid' => $targetId]);
     }
 }

@@ -157,7 +157,7 @@ class NewTopupService
         }
         if ($validate === false)
         {
-            return Redirect::back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
+            return back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
         }
         /** @var IPaymentMethod $service */
         $result = $service->request($record, $params);

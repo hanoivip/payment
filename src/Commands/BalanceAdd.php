@@ -6,9 +6,9 @@ use Illuminate\Console\Command;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\User\Facades\UserFacade;
 
-class TestBalance extends Command
+class BalanceAdd extends Command
 {
-    protected $signature = 'test:balance {uid} {balance}';
+    protected $signature = 'balance:add {uid} {balance}';
     
     protected $description = 'Add/remove balance';
     

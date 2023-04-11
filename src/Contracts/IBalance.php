@@ -20,11 +20,11 @@ interface IBalance
      * @param number $type
      * @return boolean
      */
-    public function enough($uid, $coin, $type = 0);
+    public function enough($uid, $amount, $type = 0, $currency = null);
     
-    public function add($uid, $value, $reason, $type = 0);
+    public function add($uid, $value, $reason, $type = 0, $currency = null);
     
-    public function remove($uid, $value, $reason, $type = 0);
+    public function remove($uid, $value, $reason, $type = 0, $currency = null);
     
-    public function getHistory($uid);
+    public function getHistory($uid, $page = 1, $count = 10);
 }
