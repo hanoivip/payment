@@ -7,12 +7,12 @@ use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Hanoivip\Payment\Jobs\CheckPendingReceipt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Services\WebtopupRepository;
 use Hanoivip\Payment\Models\WebtopupLogs;
 use Hanoivip\Payment\Services\WebtopupDone;
+use Hanoivip\Payment\Services\BalanceService;
 
 /**
  *
@@ -29,12 +29,16 @@ class WebTopup extends Controller
     
     private $logs;
     
+    private $balances;
+    
     public function __construct(
         NewTopupService $service,
-        WebtopupRepository $logs)
+        WebtopupRepository $logs,
+        BalanceService $balances)
     {
         $this->service = $service;
         $this->logs = $logs;
+        $this->balances = $balances;
     }
     /**
      * Nếu có nhiều hơn 1 phương pháp nạp thì cho chọn
@@ -151,11 +155,11 @@ class WebTopup extends Controller
         try
         {
             $userId = Auth::user()->getAuthIdentifier();
-            $page = 0;
-            if ($request->has('page'))
-                $page = $request->input('page');
-            $logs = $this->logs->list($userId, $page);
-            
+            $submits = $this->logs->list($userId);
+            $mods = $this->balances->getHistory($userId);
+            return view('hanoivip::webtopup-history', 
+                ['submits' => $submits[0], 'total_submits' => $submits[1],
+                 'mods' => $mods[0], 'total_mods' => $mods[1]]);
         }
         catch (Exception $ex)
         {

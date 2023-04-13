@@ -5,17 +5,15 @@ use Illuminate\Support\Facades\Route;
 // Private APIs
 Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Xem thông tin tài khoản
-    Route::any('/topup/info', 'BalanceController@info');
-    // List all payment methods
-    Route::any('/topup', 'TopupController@topupUI2');//step 1
-    Route::any('/topup/select', 'TopupController@selectType');//step 2
-    Route::any('/topup/do', 'TopupController@topup2');//result
+    Route::any('/topup/info', 'BalanceController@info')->name('api.balance.info');
     // Lịch sử chung
-    Route::any('/topup/history', 'TopupController@history');
+    // Route::any('/topup/history', 'TopupController@history');
     // Lịch sử nạp
     Route::any('/topup/historyP', 'WebTopup@topupHistory');
+    Route::any('/history/cards', 'HistoryController@topupHistory')->name('api.history.topup');
     // Lịch sử chuyển xu
     Route::any('/topup/historyR', 'BalanceController@modHistory');
+    Route::any('/history/buys', 'HistoryController@rechargeHistory')->name('api.history.recharge');
 });
 
 // New flow
@@ -37,9 +35,5 @@ Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function 
     Route::get('/topup/rank/global', 'TopupController@globalRank');
     // Lấy xếp hạng tài phú - theo tuần, tháng...
     Route::get('/topup/rank/{key}', 'TopupController@rank');
-    // Kiểm tra trạng thái thẻ nạp
-    Route::get('/topup/query', 'TopupController@query');
-    Route::get('/topup/rule', 'TopupController@getRule')->name('topup.rule');
-    Route::get('/topup/lang', 'TopupController@getLang')->name('topup.lang');
 });
 

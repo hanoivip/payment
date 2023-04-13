@@ -11,7 +11,7 @@ Route::middleware([
     })->name('topup');
     // reactjs UI
     //Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
-    Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
+    // Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
     //Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
     Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
@@ -45,7 +45,7 @@ Route::middleware([
         Route::any('/stats/bymonth', 'AdminController@byMonth')->name('ecmin.stats.bymonth');
         // Ops 
         //Route::any('/webtopup', 'AdminController@ops')->name('ecmin.webtopup');
-        Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
+        //Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
         Route::any('/webtopup/check', 'AdminController@check')->name('ecmin.webtopup.check');
         // Balance
         Route::any('/balance/request', 'AdminController@balanceRequest')->name('ecmin.balance.request');

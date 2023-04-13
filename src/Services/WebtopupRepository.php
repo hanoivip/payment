@@ -28,8 +28,8 @@ class WebtopupRepository
     public function list($userId, $page = 0, $count = 10)
     {
         $logs = WebtopupLogs::where('user_id', $userId)
-        ->skip($page * $count)
-        ->take($count)
+        //->skip($page * $count)
+        //->take($count)
         ->orderBy('id', 'desc')
         ->get();
         if ($logs->isNotEmpty())
@@ -41,6 +41,7 @@ class WebtopupRepository
                 $arr[] = $log->trans_id;
                 $times[$log->trans_id] = $log->created_at;
             }
+            // No way!
             $submissions = TsrTransaction::whereIn('trans', $arr)
             ->orderBy('id', 'desc')
             ->get();
@@ -61,8 +62,11 @@ class WebtopupRepository
                     if (!empty($obj->password))
                         $objects[] = $obj;
                 }
-                $total = WebtopupLogs::where('user_id', $userId)->count();
-                return [$objects, floor($total / 10), $page];
+                $total = count($objects);
+                //$total = WebtopupLogs::where('user_id', $userId)
+                //->whereNotNull('password')
+                //->count();
+                return [array_slice($objects, $page * 10, 10), floor($total / 10), $page];
             }
         }
     }

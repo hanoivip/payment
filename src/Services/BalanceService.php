@@ -200,10 +200,10 @@ class BalanceService implements IBalance
      * @param number $count Number of rows to fetch
      * @return \stdClass[]
      */
-    public function getHistory($uid, $page = 1, $count = 10)
+    public function getHistory($uid, $page = 0, $count = 10)
     {
         $mods = BalanceMod::where('user_id', $uid)
-        ->skip(($page - 1) * $count)
+        ->skip($page * $count)
         ->take($count)
         ->orderBy('id', 'desc')
         ->get();

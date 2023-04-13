@@ -20,6 +20,7 @@
 <table>
 <tr>
 	<th>Status</th>
+	<th>Mapping</th>
 	<th>Card password</th>
 	<th>User choosen</th>
 	<th>User penalty</th>
@@ -42,12 +43,14 @@
 			<td>Valid (pen)</td>
 			@break
 	@endswitch
+	<td>{{$submit->mapping}}</td>
     <td>{{$submit->password}}</td>
     <td>{{$submit->dvalue}}</td>
     <td>{{$submit->penalty}}</td>
     <td>{{$submit->value}}</td>
     <td>{{$submit->time}}</td>
     <td>
+    	{{--
     	@if ($submit->status != 1)
     		<form method="POST" action="{{ route('ecmin.webtopup.retry') }}">
                 {{ csrf_field() }}
@@ -55,6 +58,7 @@
             <button type="submit" class="btn btn-primary">Trả</button>
             </form>
     	@endif
+    	--}}
     	@if ($submit->status == 1)
     		<form method="POST" action="{{ route('ecmin.webtopup.check') }}">
                 {{ csrf_field() }}

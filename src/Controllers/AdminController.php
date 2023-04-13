@@ -139,10 +139,10 @@ class AdminController extends Controller
         {
             return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt not found']);
         }
-        if (!empty($log->callback))
-        {
-            return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt was done']);
-        }
+        //if (!empty($log->callback))
+        //{
+        //    return view('hanoivip::admin.webtopup-retry-result', ['message' => 'Receipt was done']);
+        //}
         $tid = $log->user_id;
         $log->callback = true;
         $log->by_admin = true;
@@ -238,7 +238,7 @@ class AdminController extends Controller
             {
                 if ($resultCache->isPending() || $resultCache->isSuccess())
                 {
-                    return view('hanoivip::webtopup-retry-result', ['message' => 'No thing to do']);
+                    return view('hanoivip::admin.webtopup-retry-result', ['message' => 'No thing to do']);
                 }
                 else 
                 {
@@ -256,13 +256,13 @@ class AdminController extends Controller
                         else if ($resultForce->isPending())
                         {
                             dispatch(new CheckPendingReceipt($tid, $receipt))->delay(60);
-                            return view('hanoivip::webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
+                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
                         }
                         else
                         {
                             event(new UserTopup($tid, 0, $resultForce->getAmount(), $receipt));
                             BalanceFacade::add($tid, $resultForce->getAmount(), "WebTopup:" . $receipt);
-                            return view('hanoivip::webtopup-retry-result', ['message' => "OK. Đã trả xu."]);
+                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Đã trả xu."]);
                         }
                     }
                 }

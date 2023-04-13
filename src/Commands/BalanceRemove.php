@@ -6,11 +6,11 @@ use Illuminate\Console\Command;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\User\Facades\UserFacade;
 
-class BalanceAdd extends Command
+class BalanceRemove extends Command
 {
-    protected $signature = 'balance:add {uid} {balance}';
+    protected $signature = 'balance:remove {uid} {balance}';
     
-    protected $description = 'Add balance';
+    protected $description = 'Remove balance';
     
     public function handle()
     {
@@ -19,7 +19,7 @@ class BalanceAdd extends Command
         $user = UserFacade::getUserCredentials($uidOrUsername);
         if (!empty($user))
         {
-            BalanceFacade::add($user->id, $balance, "admin-command");
+            BalanceFacade::remove($user->id, $balance, "admin-command");
             $this->info("ok");
         }
         else

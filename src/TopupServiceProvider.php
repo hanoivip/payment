@@ -19,6 +19,7 @@ class TopupServiceProvider extends ServiceProvider
         });
         $this->commands([
             \Hanoivip\Payment\Commands\BalanceAdd::class,
+            \Hanoivip\Payment\Commands\BalanceRemove::class,
             \Hanoivip\Payment\Commands\BalancePendings::class,
             \Hanoivip\Payment\Commands\BalanceApprove::class,
             \Hanoivip\Payment\Commands\BalanceReject::class,
