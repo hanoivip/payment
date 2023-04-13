@@ -33,10 +33,12 @@ class TopupServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/payment.php' => config_path('payment.php'),
-            __DIR__ . '/../resources/assets' => resource_path('assets/vendor/hanoivip'),
-            __DIR__ . '/../resources/images' => public_path('img'),
             __DIR__.'/../lang' => resource_path('lang/vendor/hanoivip'),
-        ]);
+        ], 'config');
+        $this->publishes([
+            __DIR__.'/../resources/assets/js' => public_path('js'),
+            __DIR__ . '/../resources/images' => public_path('img'),
+        ], 'assets');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../views', 'hanoivip');
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');

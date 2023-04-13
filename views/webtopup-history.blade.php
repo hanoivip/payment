@@ -8,6 +8,24 @@
 
 @section('content')
 
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+.status0 {
+    background-color: green;
+}
+.status1 {
+    background-color: red;
+}
+.status2 {
+    background-color: yellow;
+}
+.status3 {
+    background-color: cyan;
+}
+</style>
+
 <div id="history-submits">
     <h1>Lịch sử nạp thẻ</h1>
     @if (!empty($submits))
