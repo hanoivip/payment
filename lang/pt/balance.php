@@ -13,5 +13,10 @@ return [
     'WebTopup' => 'Pagamento na web',
     'admin-command' => 'Admin adicionar créditos',
     'not-enough-money' => 'Moeda da web insuficiente',
-    'process-error' => 'Erro no processamento da moeda. Tente novamente.'
+    'process-error' => 'Erro no processamento da moeda. Tente novamente.',
+    
+    'types' => [
+        0 => 'Main',
+        1 => 'Extend'
+    ]
 ];

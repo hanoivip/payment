@@ -13,5 +13,10 @@ return [
     'IosCostRefund' => 'Hoàn phí mua ngày Ios',
     'admin-command' => 'Admin add credits',
     'not-enough-money' => 'Không đủ coin trong tài khoản',
-    'process-error' => 'Xử lý coin lỗi, vui lòng thử lại'
+    'process-error' => 'Xử lý coin lỗi, vui lòng thử lại',
+    
+    'types' => [
+        0 => 'Chính',
+        1 => 'K.Mãi'
+    ]
 ];

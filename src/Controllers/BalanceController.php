@@ -20,12 +20,19 @@ class BalanceController extends Controller
     {
         $uid = Auth::user()->getAuthIdentifier();
         $balances = $this->balance->getInfo($uid);
-        $info = [];
-        foreach ($balances as $bal)
+        if ($request->expectsJson())
         {
-            $info[] = ['type' => $bal->balance_type, 'balance' => $bal->balance];
+            $info = [];
+            foreach ($balances as $bal)
+            {
+                $info[] = ['type' => $bal->balance_type, 'balance' => $bal->balance];
+            }
+            return ['error' => 0, 'message' => 'success', 'data' => ['balances' => $info]];
         }
-        return ['error' => 0, 'message' => 'success', 'data' => ['balances' => $info]];
+        else
+        {
+            return view('hanoivip::balances-partial', ['balances' => $balances]);
+        }
     }
     
     public function modHistory(Request $request)

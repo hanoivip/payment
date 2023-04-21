@@ -17,6 +17,7 @@ use Exception;
 class BalanceService implements IBalance
 {
     const MAIN_BALANCE = 0;
+    const EXTEND_BALANCE = 1;
 
     /**
      * Truy xuất tất cả các loại tài khoản của ng chơi.
@@ -26,7 +27,9 @@ class BalanceService implements IBalance
      */
     public function getInfo($uid)
     {
-        $balances = Balance::where('user_id', $uid)->get();
+        $balances = Balance::where('user_id', $uid)
+        ->orderBy('balance_type', 'asc')
+        ->get();
         return $balances;
     }
     /**

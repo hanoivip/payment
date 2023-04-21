@@ -27,6 +27,8 @@ Route::middleware([
     Route::any('/webtopup/done', 'WebTopup@topupDone')->name('webtopup.done');
     Route::any('/webtopup/query', 'WebTopup@query')->name('webtopup.query');
     Route::any('/webtopup/history', 'WebTopup@history')->name('webtopup.history');
+    // 202304: balance partial
+    Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
 });
 
 Route::middleware([

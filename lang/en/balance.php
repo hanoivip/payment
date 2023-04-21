@@ -13,5 +13,10 @@ return [
     'WebTopup' => 'Web topup',
     'admin-command' => 'Admin add credits',
     'not-enough-money' => 'Not enough web coin',
-    'process-error' => 'Coin processing error. Please retry again.'
+    'process-error' => 'Coin processing error. Please retry again.',
+    
+    'types' => [
+        0 => 'Main',
+        1 => 'Extend'
+    ]
 ];

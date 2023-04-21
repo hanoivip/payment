@@ -7,7 +7,7 @@
 <style type="text/css">
 	table tr td{
 		border: 1px solid;
-	}=
+	}
 </style>
 
 @if (empty($mods))
