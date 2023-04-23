@@ -43,7 +43,7 @@ class NewTopup extends Controller
                 // just forward with default method
                 $method = array_keys($methods)[0];
                 $result = $this->service->preparePayment($order, $method, $next);
-                if ($request->ajax())
+                if ($request->expectsJson())
                 {
                     return ['error' => 0, 'message' => '',
                         'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
@@ -56,7 +56,7 @@ class NewTopup extends Controller
             }
             else 
             {
-                if ($request->ajax())
+                if ($request->expectsJson())
                 {
                     return ['error' => 0, 'message' => '', 'data' => $methods];
                 }
@@ -70,7 +70,7 @@ class NewTopup extends Controller
         catch (Exception $ex)
         {
             Log::error("NewTopup list methods exception: " . $ex->getMessage());
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.methods.error'), 'data' => []];
             }
@@ -91,7 +91,7 @@ class NewTopup extends Controller
             $order = $request->input('order');
             $next = $request->input('next');
             $result = $this->service->preparePayment($order, $method, $next);
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 0, 'message' => '', 
                     'data' => ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]];
@@ -106,7 +106,7 @@ class NewTopup extends Controller
         {
             Log::error("NewTopup start payment exception: " . $ex->getMessage());
             Log::error(">>>>>>>> " . $ex->getTraceAsString());
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.choose.error'), 'data' => []];
             }
@@ -125,7 +125,7 @@ class NewTopup extends Controller
         {   
             if (!$lock->get())
             {
-                if ($request->ajax())
+                if ($request->expectsJson())
                 {
                     return ['error' => 98, 'message' => 'Do not click too fast', 'data' => []];
                 }
@@ -137,7 +137,7 @@ class NewTopup extends Controller
             $params = $request->all();
             $result = $this->service->payment($params);
             $lock->release();
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
             }
@@ -151,7 +151,7 @@ class NewTopup extends Controller
             Log::error("NewTopup payment exception: " . $ex->getMessage());
             Log::error(">>>>>>>> " . $ex->getTraceAsString());
             $lock->release();
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.topup.error'), 'data' => []];
             }
@@ -168,7 +168,7 @@ class NewTopup extends Controller
         {
             $trans = $request->input('trans');
             $result = $this->service->query($trans);
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
             }
@@ -180,7 +180,7 @@ class NewTopup extends Controller
         catch (Exception $ex)
         {
             Log::error("NewTopup query exception: " . $ex->getMessage());
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.query.error'), 'data' => []];
             }
@@ -197,7 +197,7 @@ class NewTopup extends Controller
         {
             $page = $request->input('page');
             $result = $this->service->list($page);
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
             }
@@ -209,7 +209,7 @@ class NewTopup extends Controller
         catch (Exception $ex)
         {
             Log::error("NewTopup history exception: " . $ex->getMessage());
-            if ($request->ajax())
+            if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.history.error'), 'data' => []];
             }
