@@ -215,20 +215,9 @@ class BalanceService implements IBalance
         {
             $obj = new \stdClass();
             $obj->balance = $mod->balance;
-            $obj->acc_type = $mod->balance_type == 0 ;//? 'TK chính' : 'TK phụ';
-            $list = explode(':', $mod->reason);
-            if($list[0]=='Recharge')
-            {
-                $reason = __('hanoivip.payment::balance.' . $list[0]) . $list[3];
-            }
-            else
-            {
-                $reason = __('hanoivip.payment::balance.' . $list[0]);
-                if (isset($list[1]))
-                    $reason = $reason . ' ' . $list[1];
-            }
-            $obj->reason = $reason;
-            $obj->time = $mod->created_at;//Carbon::parse($mod->created_at)->format('d/M/Y m:H');
+            $obj->acc_type = $mod->balance_type == 0;
+            $obj->reason = $mod->reason;
+            $obj->time = $mod->created_at;
             $objects[] = $obj;
         }
         $total = BalanceMod::where('user_id', $uid)->count();

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Recharge' => 'Recarga antiga',
+    'Recharge' => 'Comprar :item no servidor :server',
     'TopupPolicy' => 'Venda',
     'Topup' => 'Recarga antiga',
     'Proceed' => 'Prosseguir Ato',

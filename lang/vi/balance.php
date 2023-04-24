@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Recharge' => 'Chuyển xu ',
+    'Recharge' => 'Mua :item trên server :server',
     'TopupPolicy' => 'Khuyến mãi',
     'Topup' => 'Nạp thẻ',
     'Proceed' => 'Xúc tiến',
