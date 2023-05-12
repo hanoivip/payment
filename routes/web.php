@@ -14,7 +14,7 @@ Route::middleware([
     // Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
     //Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
-    Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
+    //Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
     // 20210728: new flow
     Route::get('/new/topup', 'NewTopup@listMethods')->name('newtopup');
     Route::post('/new/topup/shop', 'NewTopup@showShop')->name('newtopup.shop');

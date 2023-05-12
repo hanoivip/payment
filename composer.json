@@ -24,7 +24,6 @@
 	"require" : {
 		"php" : ">=7.0.0",
 		"fideloper/proxy" : "~4.0",
-		"guzzlehttp/guzzle" : "^6.3",
 		"laravel/framework" : ">=5.8",
 		"laravel/tinker" : "~1.0",
 		"hanoivip/payment-contract" : "dev-main",

@@ -32,8 +32,8 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
 // Public APIs
 Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Lấy xếp hạng tài phú
-    Route::get('/topup/rank/global', 'TopupController@globalRank');
+    //Route::get('/topup/rank/global', 'TopupController@globalRank');
     // Lấy xếp hạng tài phú - theo tuần, tháng...
-    Route::get('/topup/rank/{key}', 'TopupController@rank');
+    //Route::get('/topup/rank/{key}', 'TopupController@rank');
 });
 

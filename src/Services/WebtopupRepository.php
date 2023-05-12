@@ -51,6 +51,7 @@ class WebtopupRepository
                 foreach ($submissions as $sub)
                 {
                     $obj = new \stdClass();
+                    $obj->serial = $sub->serial;
                     $obj->password = $sub->password;
                     $obj->status = $this->getSubmissionStatus($sub);
                     $obj->dvalue = $sub->dvalue;

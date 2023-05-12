@@ -21,6 +21,7 @@
 <tr>
 	<th>Status</th>
 	<th>Mapping</th>
+	<th>Card serial</th>
 	<th>Card password</th>
 	<th>User choosen</th>
 	<th>User penalty</th>
@@ -44,6 +45,7 @@
 			@break
 	@endswitch
 	<td>{{$submit->mapping}}</td>
+	<td>{{$submit->serial}}</td>
     <td>{{$submit->password}}</td>
     <td>{{$submit->dvalue}}</td>
     <td>{{$submit->penalty}}</td>
