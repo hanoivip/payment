@@ -128,7 +128,8 @@ class AdminController extends Controller
     
     public function stats()
     {
-        return view('hanoivip::admin.stat-income');
+        $data = $this->stats->getLastDays(7);
+        return view('hanoivip::admin.stat-income', ['data' => $data]);
     }
     
     public function retry(Request $request)

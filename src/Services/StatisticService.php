@@ -104,5 +104,35 @@ class StatisticService
             }
         }
     }
+    /**
+     * Get last <number> of days: 7 14 30
+     * @param number $num
+     */
+    public function getLastDays($num = 7)
+    {
+        $keys = [];
+        $idx = [];
+        for ($i = $num - 1; $i >=0; --$i)
+        {
+            $today = date('Ymd', now()->subDays($i)->timestamp);
+            $keys[] = "today_$today";
+            $idx["today_$today"] = $i;
+        }
+        $stats = Statistic::whereIn('key', $keys)->get();
+        $vals = [];
+        foreach ($stats as $stat)
+        {
+            $vals[$idx[$stat->key]] = $stat->total;
+        }
+        return [$keys, $vals];
+    }
+    /**
+     * Get last <number> of months: 3 6 9 12
+     * @param unknown $num
+     */
+    public function getLastMonths($num = 3)
+    {
+        
+    }
     
 }
