@@ -128,11 +128,25 @@ class StatisticService
     }
     /**
      * Get last <number> of months: 3 6 9 12
-     * @param unknown $num
+     * @param number $num
      */
     public function getLastMonths($num = 3)
     {
-        
+        $keys = [];
+        $idx = [];
+        for ($i = $num - 1; $i >=0; --$i)
+        {
+            $today = date('Ymd', now()->subDays($i)->timestamp);
+            $keys[] = "income_$today";
+            $idx["income_$today"] = $i;
+        }
+        $stats = Statistic::whereIn('key', $keys)->get();
+        $vals = [];
+        foreach ($stats as $stat)
+        {
+            $vals[$idx[$stat->key]] = $stat->total;
+        }
+        return [$keys, $vals];
     }
     
 }

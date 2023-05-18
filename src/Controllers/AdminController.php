@@ -132,6 +132,12 @@ class AdminController extends Controller
         return view('hanoivip::admin.stat-income', ['data' => $data]);
     }
     
+    public function statsMonth()
+    {
+        $data = $this->stats->getLastMonths(3);
+        return view('hanoivip::admin.stat-income', ['data' => $data]);
+    }
+    
     public function retry(Request $request)
     {
         $receipt = $request->input('receipt');

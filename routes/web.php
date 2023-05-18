@@ -41,9 +41,10 @@ Route::middleware([
         Route::any('/webtopup/history', 'AdminController@webtopupHistory')->name('ecmin.webtopup.history');
         // Stats
         Route::get('/stats/stat', 'AdminController@stats')->name('ecmin.stats');
+        Route::get('/stats/statMonth', 'AdminController@statsMonth')->name('ecmin.stats.month');
         Route::any('/stats/today', 'AdminController@today')->name('ecmin.stats.today');
-        Route::any('/stats/month', 'AdminController@thisMonth')->name('ecmin.stats.month');
-        Route::any('/stats/week', 'AdminController@thisWeek')->name('ecmin.stats.week');
+        Route::any('/stats/thisMonth', 'AdminController@thisMonth')->name('ecmin.stats.thismonth');
+        Route::any('/stats/thisWeek', 'AdminController@thisWeek')->name('ecmin.stats.thisweek');
         Route::any('/stats/bymonth', 'AdminController@byMonth')->name('ecmin.stats.bymonth');
         // Ops 
         //Route::any('/webtopup', 'AdminController@ops')->name('ecmin.webtopup');
