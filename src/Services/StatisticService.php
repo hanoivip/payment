@@ -112,14 +112,15 @@ class StatisticService
     {
         $keys = [];
         $idx = [];
+        $vals = [];
         for ($i = $num - 1; $i >=0; --$i)
         {
             $today = date('Ymd', now()->subDays($i)->timestamp);
             $keys[] = "today_$today";
             $idx["today_$today"] = $i;
+            $vals[$i] = 0;
         }
         $stats = Statistic::whereIn('key', $keys)->get();
-        $vals = [];
         foreach ($stats as $stat)
         {
             $vals[$idx[$stat->key]] = $stat->total;
@@ -134,14 +135,15 @@ class StatisticService
     {
         $keys = [];
         $idx = [];
+        $vals = [];
         for ($i = $num - 1; $i >=0; --$i)
         {
-            $today = date('Ymd', now()->subDays($i)->timestamp);
+            $today = date('Ym', now()->subDays($i)->timestamp);
             $keys[] = "income_$today";
             $idx["income_$today"] = $i;
+            $vals[$i] = 0;
         }
         $stats = Statistic::whereIn('key', $keys)->get();
-        $vals = [];
         foreach ($stats as $stat)
         {
             $vals[$idx[$stat->key]] = $stat->total;
