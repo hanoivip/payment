@@ -9,10 +9,6 @@ Route::middleware([
     Route::get('/topup/step1', function (){
         return response()->redirectToRoute('webtopup');
     })->name('topup');
-    // reactjs UI
-    //Route::get('/jtopup', 'TopupController@jsTopup')->name('jtopup');
-    // Route::get('/jhistory', 'TopupController@jsHistory')->name('jhistory');
-    //Route::get('/jrecharge', 'TopupController@jsRecharge')->name('jrecharge');
     // tracking topup
     //Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
     // 20210728: new flow

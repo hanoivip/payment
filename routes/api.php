@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Xem thông tin tài khoản
     Route::any('/topup/info', 'BalanceController@info')->name('api.balance.info');
-    // Lịch sử chung
-    // Route::any('/topup/history', 'TopupController@history');
     // Lịch sử nạp
     Route::any('/topup/historyP', 'WebTopup@topupHistory');
     Route::any('/history/cards', 'HistoryController@topupHistory')->name('api.history.topup');
@@ -30,10 +28,9 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
 });
 
 // Public APIs
+// TODO: cache middleware
 Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
-    // Lấy xếp hạng tài phú
-    //Route::get('/topup/rank/global', 'TopupController@globalRank');
-    // Lấy xếp hạng tài phú - theo tuần, tháng...
-    //Route::get('/topup/rank/{key}', 'TopupController@rank');
+    // Lấy xếp hạng tài phú: tổng thể, theo tuần, tháng... (global, week, month)
+    Route::any('/topup/rank/{key}', 'StatsController@rankByKey');
 });
 

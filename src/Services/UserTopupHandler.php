@@ -26,6 +26,10 @@ class UserTopupHandler
         $curWeek = date('W', time());
         $this->statistics->stat("income_week_$curWeek", 0, $event->coin);
         //this user
+        $week = date('YW', time());
+        $this->statistics->stat("income_user", $event->uid, $event->coin);
+        $this->statistics->stat("income_user_week_" . $week, $event->uid, $event->coin);
+        $this->statistics->stat("income_user_month_" . $curMonth, $event->uid, $event->coin);
         $this->statistics->stat("income_user", $event->uid, $event->coin);
         //today
         $today = date('Ymd', time());
@@ -38,7 +42,7 @@ class UserTopupHandler
         ->get();
         foreach ($types->all() as $type)
         {
-            $this->stat($type->key, $event->uid, $event->coin);
+            $this->statistics->stat($type->key, $event->uid, $event->coin);
         }
     }
 }

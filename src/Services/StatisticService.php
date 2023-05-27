@@ -138,9 +138,9 @@ class StatisticService
         $vals = [];
         for ($i = $num - 1; $i >=0; --$i)
         {
-            $today = date('Ym', now()->subDays($i)->timestamp);
-            $keys[] = "income_$today";
-            $idx["income_$today"] = $i;
+            $thisMonth = date('Ym', now()->subMonths($i)->timestamp);
+            $keys[] = "income_$thisMonth";
+            $idx["income_$thisMonth"] = $i;
             $vals[$i] = 0;
         }
         $stats = Statistic::whereIn('key', $keys)->get();
@@ -150,5 +150,26 @@ class StatisticService
         }
         return [$keys, $vals];
     }
-    
+    /**
+     * 
+     * @param string $key
+     * @param number $count
+     * @return array rank => user id
+     */
+    public function rankByKey($key, $count = 10)
+    {
+        $records = Statistic::where('key', $key)
+        ->orderBy('total', 'desc')
+        ->take($count)
+        ->get();
+        $list = [];
+        if ($records->isNotEmpty())
+        {
+            foreach ($records as $record)
+            {
+                $list[] = [$record->user_id, $record->total];
+            }
+        }
+        return $list;
+    }
 }
