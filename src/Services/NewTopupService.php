@@ -128,6 +128,9 @@ class NewTopupService
      * - Kiểm tra trans có tham số không
      * Gửi tới phương thức nạp
      * Tạo hóa đơn
+     * 
+     * TODO: chuan hoa lai ket qua tra ve
+     * 
      * @param array $params
      * @return IPaymentResult|View
      * @throws Exception
@@ -149,15 +152,36 @@ class NewTopupService
         $validate = $service->validate($params);
         if (gettype($validate) == 'string')
         {
-            return back()->withInput()->withErrors(['error' => $validate]);
+            if (request()->expectsJson())
+            {
+                return ['error' => $validate];
+            }
+            else 
+            {
+                return back()->withInput()->withErrors(['error' => $validate]);
+            }
         }
         if (gettype($validate) == 'array' && !empty($validate))
         {
-            return back()->withInput()->withErrors($validate);
+            if (request()->expectsJson())
+            {
+                return ['error' => $validate];
+            }
+            else 
+            {
+                return back()->withInput()->withErrors($validate);
+            }
         }
         if ($validate === false)
         {
-            return back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
+            if (request()->expectsJson())
+            {
+                return ['error' => __('hanoivip.payment::payment.validate-errors')];
+            }
+            else
+            {
+                return back()->withInput()->withErrors(['error' => __('hanoivip.payment::payment.validate-errors')]);
+            }
         }
         /** @var IPaymentMethod $service */
         $result = $service->request($record, $params);
@@ -179,8 +203,7 @@ class NewTopupService
         }
         else 
         {
-            // local processing result..
-            //return $result;
+            // local processing result, no need callback
             $userId = Auth::user()->getAuthIdentifier();
             return $this->onTopupDone($userId, $transId, $result);
         }

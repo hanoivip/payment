@@ -47,7 +47,7 @@ class CheckPendingReceipt implements ShouldQueue
                 }
                 else if ($result->isFailure())
                 {
-                    
+                    //Log::debug(">> payment is invalid!");
                 }
                 else 
                 {

@@ -28,9 +28,8 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
 });
 
 // Public APIs
-// TODO: cache middleware
-Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
+Route::middleware('cache:86400')->prefix('api')->namespace('Hanoivip\Payment\Controllers')
+->group(function () {
     // Lấy xếp hạng tài phú: tổng thể, theo tuần, tháng... (global, week, month)
     Route::any('/topup/rank/{key}', 'StatsController@rankByKey');
 });
-

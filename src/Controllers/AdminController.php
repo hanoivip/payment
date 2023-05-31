@@ -263,13 +263,13 @@ class AdminController extends Controller
                         else if ($resultForce->isPending())
                         {
                             dispatch(new CheckPendingReceipt($tid, $receipt))->delay(60);
-                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Thẻ trễ, đợi.."]);
+                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Still pending. Wait more."]);
                         }
                         else
                         {
                             event(new UserTopup($tid, 0, $resultForce->getAmount(), $receipt));
                             BalanceFacade::add($tid, $resultForce->getAmount(), "WebTopup:" . $receipt);
-                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Đã trả xu."]);
+                            return view('hanoivip::admin.webtopup-retry-result', ['message' => "OK. Credit added."]);
                         }
                     }
                 }

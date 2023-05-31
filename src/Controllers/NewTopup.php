@@ -105,7 +105,7 @@ class NewTopup extends Controller
         catch (Exception $ex) 
         {
             Log::error("NewTopup start payment exception: " . $ex->getMessage());
-            Log::error(">>>>>>>> " . $ex->getTraceAsString());
+            report($ex);
             if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.choose.error'), 'data' => []];
@@ -116,41 +116,30 @@ class NewTopup extends Controller
             }
         }
     }
-    
+    /**
+     * TODO: thiet ke lai payment, chuyen cac kieu result ra ngoai controller
+     */
     public function topup(Request $request)
     {
-		$uid = Auth::user()->getAuthIdentifier();
-        $lock = Cache::lock('NewTopup::topup::' . $uid, 10);
         try
-        {   
-            if (!$lock->get())
-            {
-                if ($request->expectsJson())
-                {
-                    return ['error' => 98, 'message' => 'Do not click too fast', 'data' => []];
-                }
-                else
-                {
-                    return view('hanoivip::new-topup-failure', ['message' => 'Do not click too fast']);
-                }
-            }
+        {
             $params = $request->all();
             $result = $this->service->payment($params);
-            $lock->release();
             if ($request->expectsJson())
             {
-                return ['error' => 0, 'message' => '', 'data' => $result->toArray()];
+                //bad
+                return $result;
             }
             else
             {
+                //bad
                 return $result;
             }
         }
         catch (Exception $ex)
         {
             Log::error("NewTopup payment exception: " . $ex->getMessage());
-            Log::error(">>>>>>>> " . $ex->getTraceAsString());
-            $lock->release();
+            report($ex);
             if ($request->expectsJson())
             {
                 return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.topup.error'), 'data' => []];

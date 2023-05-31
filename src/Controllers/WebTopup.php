@@ -93,8 +93,17 @@ class WebTopup extends Controller
     {
         throw new Exception("Webtopup implement method method...");
     }
-    
+    /**
+     * @deprecated No need to callback
+     * @param Request $request
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function topupDone(Request $request)
+    {
+        return ['error' => 0, 'message' => 'success', 'data' => 'Method depricated'];
+    }
+    /*
+    public function topupDone1(Request $request)
     {
         $receipt = $request->input('receipt');
         $userId = Auth::user()->getAuthIdentifier();
@@ -113,7 +122,7 @@ class WebTopup extends Controller
         $log->save();
         $result = $this->service->query($receipt);
         return $this->onTopupDone($userId, $receipt, $result);
-    }
+    }*/
     /**
      * Return for jhistory UI
      * @param Request $request
@@ -232,8 +241,13 @@ class WebTopup extends Controller
             }
         }
     }
-	// pay with credit, at once
-	// TODO: QuickPaymentScreen: make order & request quick payemnt
+	/**
+	 * pay with credit, at once
+	 * QuickPaymentScreen: make order & request quick payemnt
+	 * @deprecated
+	 * @param Request $request
+	 * @return number[]|string[]|NULL[][]|number[]|string[]|array[]
+	 */
     public function quickRecharge(Request $request)
     {
         $userId = Auth::user()->getAuthIdentifier();
