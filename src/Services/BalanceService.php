@@ -18,6 +18,7 @@ class BalanceService implements IBalance
 {
     const MAIN_BALANCE = 0;
     const EXTEND_BALANCE = 1;
+    const AGENCY_BALANCE = 2;
 
     /**
      * Truy xuất tất cả các loại tài khoản của ng chơi.

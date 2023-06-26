@@ -17,6 +17,7 @@ return [
     
     'types' => [
         0 => 'Main',
-        1 => 'Extend'
+        1 => 'Extend',
+        2 => 'Agency'
     ]
 ];
