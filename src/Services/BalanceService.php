@@ -81,7 +81,8 @@ class BalanceService implements IBalance
     
     public function convertWebcoin($value, $currency)
     {
-        return $this->convert($value, $currency, 'webcoin');
+        $balanceCurrency = config('payment.balance_currency', 'webcoin');
+        return $this->convert($value, $currency, $balanceCurrency);
     }
     
     /**
@@ -104,6 +105,47 @@ class BalanceService implements IBalance
         }
         if (!empty($currency))
         {
+            $coin = $this->convertWebcoin($value, $currency);
+            $reason = $reason . ":$currency@$value";
+        }
+        else
+        {
+            $coin = intval($value);
+        }
+        $balance = Balance::where('user_id', $uid)
+                        ->where('balance_type', $type)
+                        ->first();
+        if (empty($balance))
+        {
+            $balance = new Balance();
+            $balance->user_id = $uid;
+            $balance->balance_type = $type;
+            $balance->balance = $coin;
+            $balance->save();
+        }
+        else
+        {
+            $balance->balance += $coin;
+            $balance->save();
+        }
+        // save log
+        $log = new BalanceMod();
+        $log->user_id = $uid;
+        $log->balance_type = $type;
+        $log->balance = $coin;
+        $log->reason = $reason;
+        $log->save();
+        return true;
+    }
+    public function add_bk($uid, $value, $reason, $type = 0, $currency = null)
+    {
+        if ($value <= 0)
+        {
+            Log::warn("Balance value is zero or negative. skip!");
+            return;
+        }
+        if (!empty($currency))
+        {
             // exchange: $amount => USD * 100
             $coin = intval(Currency::convert()
                 ->from($currency)
@@ -117,8 +159,8 @@ class BalanceService implements IBalance
             $coin = intval($value);
         }
         $balance = Balance::where('user_id', $uid)
-                        ->where('balance_type', $type)
-                        ->first();
+        ->where('balance_type', $type)
+        ->first();
         if (empty($balance))
         {
             $balance = new Balance();
@@ -160,12 +202,7 @@ class BalanceService implements IBalance
         }
         if (!empty($currency))
         {
-            // exchange: $amount => USD * 100
-            $coin = intval(Currency::convert()
-                ->from($currency)
-                ->to('USD')
-                ->amount($value)
-                ->get() * 100);
+            $coin = $this->convertWebcoin($value, $currency);
             $reason = $reason . ":$currency@$value";
         }
         else 
@@ -175,6 +212,51 @@ class BalanceService implements IBalance
         $balance = Balance::where('user_id', $uid)
             ->where('balance_type', $type)
             ->first();
+        if (empty($balance))
+        {
+            Log::debug("Balance user {$uid} has not balance type {$type} yet.");
+            return false;
+        }
+        if ($balance->balance < $coin)
+        {
+            Log::debug("Balance user {$uid} has not enough balance");
+            return false;
+        }
+        $balance->balance -= $coin;
+        $balance->save();
+        // save log
+        $log = new BalanceMod();
+        $log->user_id = $uid;
+        $log->balance_type = $type;
+        $log->balance = -1 * $coin;
+        $log->reason = $reason;
+        $log->save();
+        return true;
+    }
+    public function remove_bk($uid, $value, $reason, $type = 0, $currency = null)
+    {
+        if ($value <= 0)
+        {
+            Log::warn("Balance value is zero or negative. skip!");
+            return false;
+        }
+        if (!empty($currency))
+        {
+            // exchange: $amount => USD * 100
+            $coin = intval(Currency::convert()
+                ->from($currency)
+                ->to('USD')
+                ->amount($value)
+                ->get() * 100);
+            $reason = $reason . ":$currency@$value";
+        }
+        else
+        {
+            $coin = intval($value);
+        }
+        $balance = Balance::where('user_id', $uid)
+        ->where('balance_type', $type)
+        ->first();
         if (empty($balance))
         {
             Log::debug("Balance user {$uid} has not balance type {$type} yet.");

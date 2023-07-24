@@ -192,12 +192,12 @@ class NewTopupService
         {
             if (strpos($next, 'http') === false)
             {
-                //Log::debug("NewTopupService redirect to route.." . $next);
+                Log::debug("NewTopupService redirect to route.." . $next);
                 return response()->redirectToRoute($next, ['order' => $record->order, 'receipt' => $transId]);
             }
             else
             {
-                //Log::debug("NewTopupService redirect to external url.." . $next);
+                Log::debug("NewTopupService redirect to external url.." . $next);
                 return response()->redirectTo($next)->withHeaders(['order' => $record->order, 'receipt' => $transId]);
             }
         }

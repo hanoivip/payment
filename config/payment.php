@@ -46,5 +46,6 @@ return [
     // web topup methods
     'webtopup' => [
         'methods' =>['tsr1']
-    ]
+    ],
+    'balance_currency' => 'vnd', // webcoin=usdx100
 ];
