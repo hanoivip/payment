@@ -10,7 +10,7 @@ $(document).ready(function(){
 		var updateId = $(this).attr('data-update-id')
 		$.ajax({
             url: url + "?page=" + page,
-            method: 'GET',
+            method: 'POST',
             cache: false,
             processData: false,
             success:function(response)

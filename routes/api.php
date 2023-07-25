@@ -7,8 +7,8 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     // Xem thông tin tài khoản
     Route::any('/topup/info', 'BalanceController@info')->name('api.balance.info');
     // Lịch sử nạp
-    Route::any('/topup/historyP', 'WebTopup@topupHistory');
-    Route::any('/history/cards', 'HistoryController@topupHistory')->name('api.history.topup');
+    Route::middleware('cacheByUser:60')->any('/topup/historyP', 'WebTopup@topupHistory');
+    Route::middleware('cacheByUser:60')->any('/history/cards', 'HistoryController@topupHistory')->name('api.history.topup');
     // Lịch sử chuyển xu
     Route::any('/topup/historyR', 'BalanceController@modHistory');
     Route::any('/history/buys', 'HistoryController@rechargeHistory')->name('api.history.recharge');

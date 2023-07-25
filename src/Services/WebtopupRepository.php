@@ -2,6 +2,7 @@
 
 namespace Hanoivip\Payment\Services;
 
+use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\PaymentMethodTsr\TsrTransaction;
 use Hanoivip\Payment\Models\WebtopupLogs;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class WebtopupRepository
         $log->save();
         return true;
     }
-    
+    // 
     public function list($userId, $page = 0, $count = 10)
     {
         $logs = WebtopupLogs::where('user_id', $userId)
@@ -50,12 +51,14 @@ class WebtopupRepository
             {
                 foreach ($submissions as $sub)
                 {
+                    /** @var \Hanoivip\PaymentMethodContract\IPaymentResult $result */
+                    $result = $this->service->query($sub->trans);
                     $obj = new \stdClass();
                     $obj->serial = $sub->serial;
                     $obj->password = $sub->password;
-                    $obj->status = $this->getSubmissionStatus($sub);
+                    $obj->status = $this->getSubmissionStatus($result, $sub);
                     $obj->dvalue = $sub->dvalue;
-                    $obj->value = $sub->value;
+                    $obj->value = $result->getAmount(); //$sub->value;
                     $obj->penalty = $obj->status == 3 ? '50' : '0';
                     $obj->mapping = $sub->trans;
                     $obj->time = $times[$sub->trans];
@@ -71,10 +74,14 @@ class WebtopupRepository
             }
         }
     }
-    
-    private function getSubmissionStatus($submission)
+    /**
+     * 
+     * @param IPaymentResult $result
+     * @param TsrTransaction $record
+     * @return number
+     */
+    private function getSubmissionStatus($result, $record)
     {
-        $result = $this->service->query($submission->trans);
         $status = 0;
         if (gettype($result) == 'string')
         {
@@ -92,7 +99,7 @@ class WebtopupRepository
             }
             else 
             {
-                if ($submission->value != $submission->dvalue)
+                if ($result->getAmount() != $record->dvalue)
                 {
                     $status = 3;
                 }
