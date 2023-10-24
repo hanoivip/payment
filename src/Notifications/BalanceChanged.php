@@ -11,7 +11,7 @@ class BalanceChanged extends Notification implements ShouldQueue
 {
     use Queueable;
     
-    private $change;
+    private $amount;
     private $reason;
 
     /**
@@ -19,9 +19,9 @@ class BalanceChanged extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($change, $reason)
+    public function __construct($amount, $reason)
     {
-        $this->change=$change;
+        $this->amount=$amount;
         $this->reason=$reason;
     }
 
@@ -59,7 +59,7 @@ class BalanceChanged extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'change'=>$this->change,
+            'amount'=>$this->amount,
             'reason'=>$this->reason,
         ];
     }
