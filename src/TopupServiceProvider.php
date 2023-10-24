@@ -25,6 +25,7 @@ class TopupServiceProvider extends ServiceProvider
             \Hanoivip\Payment\Commands\BalanceReject::class,
             \Hanoivip\Payment\Commands\PolicyNew::class,
             \Hanoivip\Payment\Commands\TestTopup::class,
+            \Hanoivip\Payment\Commands\BalanceRefund::class,
         ]);
         $this->app->bind("LocalPaymentService", NewTopupService::class);
     }

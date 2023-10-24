@@ -311,4 +311,24 @@ class AdminController extends Controller
         }
         return view('hanoivip::admin.balance-request', ['message' => $message, 'error_message' => $error, 'tid' => $targetId]);
     }
+    
+    public function findUserByOrder(Request $request)
+    {
+        $message = "";
+        $error = "";
+        if ($request->getMethod() == 'POST')
+        {
+            $order = $request->input('order');
+            $log = WebtopupLogs::where('trans_id', $order)->first();
+            if (!empty($log))
+            {
+                return redirect()->route('user-detail', ['tid' => $log->user_id]);
+            }
+            else
+            {
+                $error = "Order not found!";
+            }
+        }
+        return view('hanoivip::admin.webtopup-find-user', ['message' => $message, 'error_message' => $error]);
+    }
 }

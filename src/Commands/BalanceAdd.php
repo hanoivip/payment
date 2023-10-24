@@ -10,7 +10,7 @@ class BalanceAdd extends Command
 {
     protected $signature = 'balance:add {uid} {balance}';
     
-    protected $description = 'Add balance';
+    protected $description = 'Add balance. No need to approve.';
     
     public function handle()
     {

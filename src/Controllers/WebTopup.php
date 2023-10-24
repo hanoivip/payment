@@ -84,6 +84,7 @@ class WebTopup extends Controller
             catch (Exception $ex)
             {
                 Log::error("Webtopup index exception:" + $ex->getMessage());
+                //report($ex);
                 return view('hanoivip::webtopup-failure', ['message' => __('hanoivip.payment::webtopup.exception')]);
             }
         }
