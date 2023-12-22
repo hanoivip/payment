@@ -24,6 +24,14 @@ class NewTopupService
     {
         $this->transactions = $transactions;
     }
+    public function getConfig($id)
+    {
+        $all = config('payment.methods', []);
+        if (isset($all[$id]) && isset($all[$id]['setting']))
+        {
+            return $all[$id]['setting'];
+        }
+    }
     /**
      * Dựa vào cấu hình, kiểm tra qua & trả về các phương pháp nạp có thể sử dụng
      * Phương pháp nào lỗi hệ thống => không hiển thị
@@ -266,5 +274,10 @@ class NewTopupService
     public function list($page = 0, $count = 10)
     {
         
+    }
+    
+    public function get($transId)
+    {
+        return $this->transactions->get($transId);
     }
 }

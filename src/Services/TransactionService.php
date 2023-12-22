@@ -6,6 +6,7 @@ use Hanoivip\Payment\Models\Transaction;
 use Illuminate\Support\Str;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
 
+// TransactionRepository
 class TransactionService
 {
     public function newTrans()

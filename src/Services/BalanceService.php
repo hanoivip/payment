@@ -197,7 +197,7 @@ class BalanceService implements IBalance
     {
         if ($value <= 0)
         {
-            Log::warn("Balance value is zero or negative. skip!");
+            Log::error("Balance value is zero or negative. skip!");
             return false;
         }
         if (!empty($currency))
