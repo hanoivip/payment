@@ -41,9 +41,9 @@ class CheckPendingReceipt implements ShouldQueue
                 if ($result->isPending())
                 {
                     if ($this->attempts() < 10)
-                        $this->release(120);
+                        $this->release(60);
                     else 
-                        $this->release(600);
+                        $this->release(300);
                 }
                 else if ($result->isFailure())
                 {
