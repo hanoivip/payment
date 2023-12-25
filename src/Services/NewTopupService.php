@@ -4,8 +4,6 @@ namespace Hanoivip\Payment\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Exception;
 use Hanoivip\PaymentMethodContract\IPaymentMethod;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
@@ -279,5 +277,12 @@ class NewTopupService
     public function get($transId)
     {
         return $this->transactions->get($transId);
+    }
+    
+    public function pendingPage($transId)
+    {
+        $record = $this->transactions->get($transId);
+        $service = $this->getMethodImplement($record->method);
+        return $service->openPendingPage($record);
     }
 }
