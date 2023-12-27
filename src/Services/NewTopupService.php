@@ -117,6 +117,11 @@ class NewTopupService
      */
     public function preparePayment($order, $method, $next = "")
     {
+        $current = $this->transactions->getByOrder($order);
+        if (!empty($current))
+        {
+            throw new Exception(__('hanoivip.payment::order-exists'));
+        }
         $service = $this->getMethodImplement($method);
         /** @var IPaymentMethod $service */
         $record = $this->transactions->newTrans();
@@ -158,6 +163,7 @@ class NewTopupService
         $validate = $service->validate($params);
         if (gettype($validate) == 'string')
         {
+            Log::error("Payment validation fail:" . $validate);
             if (request()->expectsJson())
             {
                 return ['error' => $validate];
@@ -169,6 +175,7 @@ class NewTopupService
         }
         if (gettype($validate) == 'array' && !empty($validate))
         {
+            Log::error("Payment validation fails");
             if (request()->expectsJson())
             {
                 return ['error' => $validate];
@@ -180,6 +187,7 @@ class NewTopupService
         }
         if ($validate === false)
         {
+            Log::error("Payment validation fail in general");
             if (request()->expectsJson())
             {
                 return ['error' => __('hanoivip.payment::payment.validate-errors')];
@@ -237,6 +245,15 @@ class NewTopupService
         }
         return $result;
     }
+    public function queryByOrder($order, $force = false)
+    {
+        $record = $this->transactions->getByOrder($order);
+        if (!empty($record))
+        {
+            return $this->query($record->trans_id, $force);
+        }
+        return false;
+    }
     /**
      * 1 giao dịch có thông báo mới cần cập nhật kết quả
      * @param string $trans
@@ -284,5 +301,12 @@ class NewTopupService
         $record = $this->transactions->get($transId);
         $service = $this->getMethodImplement($record->method);
         return $service->openPendingPage($record);
+    }
+    
+    public function paymentPage($transId, $guide, $session)
+    {
+        $record = $this->transactions->get($transId);
+        $service = $this->getMethodImplement($record->method);
+        return $service->openPaymentPage($transId, $guide, $session);
     }
 }

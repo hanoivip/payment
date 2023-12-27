@@ -7,8 +7,6 @@ use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
 
 /**
  *
@@ -24,13 +22,31 @@ class NewTopup extends Controller
         $this->service = $service;
     }
     
-    public function listMethods(Request $request)
+    public function start(Request $request)
     {
         $order = $request->input('order');
         $next = $request->input('next');
         $client = null;
         if ($request->has('client'))
+        {
             $client = $request->input('client');
+        }
+        $check = $this->service->queryByOrder($order);
+        if ($check !== false)
+        {
+            if ($check->isPending())
+            {
+                return $this->service->pendingPage($check->getTransId());
+            }
+            else if ($check->isSuccess())
+            {
+                return view('hanoivip::new-topup-done-success');
+            }
+            else
+            {
+                return view('hanoivip::new-topup-done-failure');
+            }
+        }
         try
         {
             $methods = $this->service->getMethods($client);
@@ -50,11 +66,10 @@ class NewTopup extends Controller
                 }
                 else
                 {
-                    return view('hanoivip::new-topup-method-' . $method,
-                        ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]);
+                    return $this->service->paymentPage($result->getTransId(), $result->getGuide(), $result->getData());
                 }
             }
-            else 
+            else
             {
                 if ($request->expectsJson())
                 {
@@ -62,7 +77,7 @@ class NewTopup extends Controller
                 }
                 else
                 {
-                    return view('hanoivip::new-topup-methods', 
+                    return view('hanoivip::new-topup-methods',
                         ['methods' => $methods, 'order' => $order, 'next' => $next]);
                 }
             }
@@ -76,7 +91,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip.payment::newtopup.methods.error')]);
+                return view('hanoivip::new-topup-failure', ['error_message' => __('hanoivip.payment::newtopup.methods.error')]);
             }
         }
     }
@@ -98,8 +113,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-method-' . $method, 
-                    ['trans' => $result->getTransId(), 'guide' => $result->getGuide(), 'data' => $result->getData()]);
+                return $this->service->paymentPage($result->getTransId(), $result->getGuide(), $result->getData());
             }
         } 
         catch (Exception $ex) 
@@ -112,7 +126,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip.payment::newtopup.choose.error')]);
+                return view('hanoivip::new-topup-failure', ['error_message' => __('hanoivip.payment::newtopup.choose.error')]);
             }
         }
     }
@@ -146,7 +160,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip.payment::newtopup.topup.error')]);
+                return view('hanoivip::new-topup-failure', ['error_message' => __('hanoivip.payment::newtopup.topup.error')]);
             }
         }
     }
@@ -175,7 +189,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip.payment::newtopup.query.error')]);
+                return view('hanoivip::new-topup-failure', ['error_message' => __('hanoivip.payment::newtopup.query.error')]);
             }
         }
     }
@@ -204,7 +218,7 @@ class NewTopup extends Controller
             }
             else
             {
-                return view('hanoivip::new-topup-failure', ['message' => __('hanoivip.payment::newtopup.history.error')]);
+                return view('hanoivip::new-topup-failure', ['error_message' => __('hanoivip.payment::newtopup.history.error')]);
             }
         }
     }

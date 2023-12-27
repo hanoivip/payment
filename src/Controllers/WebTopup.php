@@ -10,14 +10,14 @@ use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Services\WebtopupRepository;
-use Hanoivip\Payment\Models\WebtopupLogs;
 use Hanoivip\Payment\Services\WebtopupDone;
 use Hanoivip\Payment\Services\BalanceService;
 
 /**
  *
  * Web topup with prepaid card
- * Quick flow
+ * - Target to web balance
+ * - Quick flow
  * @author hanoivip
  *
  */

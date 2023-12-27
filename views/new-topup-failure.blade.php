@@ -3,9 +3,8 @@
 @section('title', 'Các phương pháp nạp được hỗ trợ')
 
 @section('content')
-
-<p>{{ $message }}</p>        
-<a href="{{ route('newrecharge') }}"><button>Chuyển lại</button></a>
+    
+<a href="{{ route('deftopup') }}"><button>Chuyển lại</button></a>
 
 
 @endsection

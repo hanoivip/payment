@@ -21,6 +21,12 @@ class TransactionService
     {
         return Transaction::where('trans_id', $transId)->first();
     }
+    
+    public function getByOrder($order)
+    {
+        return Transaction::where('order', $order)->first();
+    }
+    
     /**
      * 
      * @param Transaction $record

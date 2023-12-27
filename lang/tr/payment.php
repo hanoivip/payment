@@ -3,7 +3,7 @@
 return [
     'methods' => [
         'next' => 'Next',
-        'title' => 'Plz choose payment method',
+        'title' => 'Please choose payment method',
         'empty' => 'Still have no payment method. Plz try later.'
     ],
     'credit' => [
