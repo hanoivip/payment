@@ -4,6 +4,7 @@ namespace Hanoivip\Payment\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Exception;
 use Hanoivip\PaymentMethodContract\IPaymentMethod;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
@@ -203,20 +204,34 @@ class NewTopupService
         $service->endTrans($transId);
         $this->transactions->saveResult($record, $result);
         $next = $record->next;
-        $clazz = app()->make($next);
+        
         $userId = Auth::user()->getAuthIdentifier();
-        if (!empty($clazz))
-        {
-            Log::debug("NewTopupService payment done on $next class");
-            /** @var IPaymentDone $clazz */
-            return $clazz->onTopupDone($userId, $transId, $result);
-        }
-        else if (!empty($next))
+        if (!empty($next))
         {
             if (strpos($next, 'http') === false)
             {
-                Log::debug("NewTopupService redirect to route.." . $next);
-                return response()->redirectToRoute($next, ['order' => $record->order, 'receipt' => $transId]);
+                if (Route::has($next))
+                {
+                    Log::debug("NewTopupService redirect to route.." . $next);
+                    return response()->redirectToRoute($next, ['order' => $record->order, 'receipt' => $transId]);
+                }
+                else 
+                {
+                    try
+                    {
+                        $clazz = app()->make($next);
+                        if (!empty($clazz))
+                        {
+                            Log::debug("NewTopupService payment done on $next class");
+                            /** @var IPaymentDone $clazz */
+                            return $clazz->onTopupDone($userId, $transId, $result);
+                        }
+                    }
+                    catch (Exception $ex)
+                    {
+                        Log::error("NewTopupService resolve clazz $next error " . $ex->getMessage());
+                    }
+                }
             }
             else
             {
