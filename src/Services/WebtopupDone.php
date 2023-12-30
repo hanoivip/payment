@@ -6,12 +6,18 @@ use Illuminate\Support\Facades\Log;
 use Exception;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\Payment\Jobs\CheckPendingReceipt;
-
+use Illuminate\View\View;
+/**
+ * Default payment post process. Add to web balance.
+ * @author GameOH
+ *
+ */
 trait WebtopupDone 
 {
     /**
      * 
      * @param IPaymentResult $result
+     * @return View
      */
     function onTopupDone($userId, $receipt, $result)
     {

@@ -5,24 +5,20 @@ Route::middleware([
     'web',
     'auth:web'
 ])->namespace('Hanoivip\Payment\Controllers')->group(function () {
-    // new gate version: deprecated
-    Route::get('/topup/step1', function (){
-        return response()->redirectToRoute('webtopup');
-    })->name('topup');
-    // tracking topup
-    //Route::get('/topup/success', 'TopupController@onTopupSuccess')->name('topup.success');  
-    // 20210728: new flow
+    // Payment Gateway
     Route::get('/new/topup', 'NewTopup@start')->name('newtopup');
     Route::post('/new/topup/shop', 'NewTopup@showShop')->name('newtopup.shop');
     Route::post('/new/topup', 'NewTopup@choose')->name('newtopup.choose');
     Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
     Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
-    // 20211101: web credit
+    /*
+    // Flow 2: topup to web balance
     Route::get('/webtopup', 'WebTopup@index')->name('webtopup');
     Route::any('/webtopup/method', 'WebTopup@choose')->name('webtopup.method');
     Route::any('/webtopup/done', 'WebTopup@topupDone')->name('webtopup.done');
     Route::any('/webtopup/query', 'WebTopup@query')->name('webtopup.query');
     Route::any('/webtopup/history', 'WebTopup@history')->name('webtopup.history');
+    */
     // 202304: balance partial
     Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
 });
@@ -43,10 +39,9 @@ Route::middleware([
         Route::any('/stats/thisWeek', 'AdminController@thisWeek')->name('ecmin.stats.thisweek');
         Route::any('/stats/bymonth', 'AdminController@byMonth')->name('ecmin.stats.bymonth');
         // Ops 
-        //Route::any('/webtopup', 'AdminController@ops')->name('ecmin.webtopup');
         //Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
-        Route::any('/webtopup/check', 'AdminController@check')->name('ecmin.webtopup.check');
-        Route::any('/webtopup/find-user-by-order', 'AdminController@findUserByOrder')->name('ecmin.webtopup.finduser');
+        //Route::any('/webtopup/check', 'AdminController@check')->name('ecmin.webtopup.check');
+        //Route::any('/webtopup/find-user-by-order', 'AdminController@findUserByOrder')->name('ecmin.webtopup.finduser');
         // Balance
         Route::any('/balance/request', 'AdminController@balanceRequest')->name('ecmin.balance.request');
         //Route::any('/balance/request-pendings', 'AdminController@balancePendings')->name('ecmin.balance.pendings');

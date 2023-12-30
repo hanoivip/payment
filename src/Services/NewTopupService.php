@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 
 class NewTopupService
 {   
+    // Default process
     use WebtopupDone;
     
     private $transactions;
@@ -202,7 +203,15 @@ class NewTopupService
         $service->endTrans($transId);
         $this->transactions->saveResult($record, $result);
         $next = $record->next;
-        if (!empty($next))
+        $clazz = app()->make($next);
+        $userId = Auth::user()->getAuthIdentifier();
+        if (!empty($clazz))
+        {
+            Log::debug("NewTopupService payment done on $next class");
+            /** @var IPaymentDone $clazz */
+            return $clazz->onTopupDone($userId, $transId, $result);
+        }
+        else if (!empty($next))
         {
             if (strpos($next, 'http') === false)
             {
@@ -217,9 +226,10 @@ class NewTopupService
         }
         else 
         {
-            // local processing result, no need callback
-            $userId = Auth::user()->getAuthIdentifier();
-            return $this->onTopupDone($userId, $transId, $result);
+            // default post process
+            // should be as simple as logging
+            //return $this->onTopupDone($userId, $transId, $result);]
+            return 'transaction doe';
         }
     }
     /**

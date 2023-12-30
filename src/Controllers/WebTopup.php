@@ -10,7 +10,6 @@ use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Hanoivip\Payment\Services\WebtopupRepository;
-use Hanoivip\Payment\Services\WebtopupDone;
 use Hanoivip\Payment\Services\BalanceService;
 
 /**
@@ -19,12 +18,12 @@ use Hanoivip\Payment\Services\BalanceService;
  * - Target to web balance
  * - Quick flow
  * @author hanoivip
+ * 
+ * TODO: move to another package
  *
  */
 class WebTopup extends Controller
-{
-    use WebtopupDone;
-    
+{   
     private $service;
     
     private $logs;
@@ -93,71 +92,6 @@ class WebTopup extends Controller
     public function method(Request $request)
     {
         throw new Exception("Webtopup implement method method...");
-    }
-    /**
-     * @deprecated No need to callback
-     * @param Request $request
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
-     */
-    public function topupDone(Request $request)
-    {
-        return ['error' => 0, 'message' => 'success', 'data' => 'Method depricated'];
-    }
-    /*
-    public function topupDone1(Request $request)
-    {
-        $receipt = $request->input('receipt');
-        $userId = Auth::user()->getAuthIdentifier();
-        $log = WebtopupLogs::where('user_id', $userId)
-        ->where('trans_id', $receipt)
-        ->first();
-        if (empty($log))
-        {
-            return view('hanoivip::webtopup-failure', ['message' => 'Receipt not exists']);
-        }
-        if (!empty($log->callback))
-        {
-            return view('hanoivip::webtopup-failure', ['message' => 'Receipt was done']);
-        }
-        $log->callback = true;
-        $log->save();
-        $result = $this->service->query($receipt);
-        return $this->onTopupDone($userId, $receipt, $result);
-    }*/
-    /**
-     * Return for jhistory UI
-     * @param Request $request
-     */
-    public function topupHistory(Request $request)
-    {
-        try
-        {
-            $userId = Auth::user()->getAuthIdentifier();
-            $page = 0;
-            if ($request->has('page'))
-                $page = $request->input('page');
-            $history = $this->logs->list($userId, $page);
-            if ($request->ajax())
-            {
-                return ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]];
-            }
-            else
-            {
-                return view('hanoivip::topup-history', ['submits' => $history[0], 'total_page' => $history[1], 'current_page' => $history[2]]);
-            }
-        }
-        catch (Exception $ex)
-        {
-            Log::error("Webtopup history exception " . $ex->getMessage());
-            if ($request->ajax())
-            {
-                return ['submits' => [], 'total_page' => 0, 'current_page' => 0];
-            }
-            else
-            {
-                return view('hanoivip::topup-history', ['submits' => [], 'total_page' => 0, 'current_page' => 0]);
-            }
-        }
     }
     
     public function history(Request $request)
