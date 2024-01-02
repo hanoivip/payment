@@ -14,7 +14,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     Route::any('/history/buys', 'HistoryController@rechargeHistory')->name('api.history.recharge');
 });
 
-// New flow
+// Payment Gateway
 Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     Route::any('/pay/methods', 'NewTopup@listMethods');
     Route::any('/pay/init', 'NewTopup@choose');

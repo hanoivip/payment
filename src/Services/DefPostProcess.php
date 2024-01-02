@@ -12,7 +12,7 @@ use Illuminate\View\View;
  * @author GameOH
  *
  */
-trait WebtopupDone 
+trait DefPostProcess 
 {
     /**
      * 

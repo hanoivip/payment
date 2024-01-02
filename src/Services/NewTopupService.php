@@ -14,8 +14,7 @@ use Illuminate\Contracts\View\View;
 
 class NewTopupService
 {   
-    // Default process
-    use WebtopupDone;
+    use DefPostProcess;
     
     private $transactions;
     
@@ -212,7 +211,7 @@ class NewTopupService
             {
                 if (Route::has($next))
                 {
-                    Log::debug("NewTopupService redirect to route.." . $next);
+                    Log::debug("NewTopup redirect to route.." . $next);
                     return response()->redirectToRoute($next, ['order' => $record->order, 'receipt' => $transId]);
                 }
                 else 
@@ -229,8 +228,9 @@ class NewTopupService
                     }
                     catch (Exception $ex)
                     {
-                        Log::error("NewTopupService resolve clazz $next error " . $ex->getMessage());
-                        // neex to save for admin check
+                        Log::error("NewTopup resolve clazz $next error " . $ex->getMessage());
+                        Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default.");
+                        return $this->onTopupDone($userId, $transId, $result);
                     }
                 }
             }
@@ -242,10 +242,8 @@ class NewTopupService
         }
         else 
         {
-            // default post process
-            // should be as simple as logging
-            //return $this->onTopupDone($userId, $transId, $result);]
-            return 'transaction doe';
+            Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default.");
+            return $this->onTopupDone($userId, $transId, $result);
         }
     }
     /**
