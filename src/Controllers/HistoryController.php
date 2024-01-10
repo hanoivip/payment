@@ -4,8 +4,6 @@ namespace Hanoivip\Payment\Controllers;
 
 use App\Http\Controllers\Controller;
 use Hanoivip\Payment\Services\BalanceService;
-use Hanoivip\Payment\Services\NewTopupService;
-use Hanoivip\Payment\Services\WebtopupRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -24,10 +22,8 @@ class HistoryController extends Controller
     private $balances;
     
     public function __construct(
-        WebtopupRepository $logs,
         BalanceService $balances)
     {
-        $this->logs = $logs;
         $this->balances = $balances;
     }
     

@@ -11,14 +11,6 @@ Route::middleware([
     Route::post('/new/topup', 'NewTopup@choose')->name('newtopup.choose');
     Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
     Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
-    /*
-    // Flow 2: topup to web balance
-    Route::get('/webtopup', 'WebTopup@index')->name('webtopup');
-    Route::any('/webtopup/method', 'WebTopup@choose')->name('webtopup.method');
-    Route::any('/webtopup/done', 'WebTopup@topupDone')->name('webtopup.done');
-    Route::any('/webtopup/query', 'WebTopup@query')->name('webtopup.query');
-    Route::any('/webtopup/history', 'WebTopup@history')->name('webtopup.history');
-    */
     // 202304: balance partial
     Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
 });
@@ -30,7 +22,6 @@ Route::middleware([
     ->prefix('ecmin')
     ->group(function () {
         Route::any('/balance/history', 'AdminController@balanceHistory')->name('ecmin.balance.history');
-        //Route::any('/webtopup/history', 'AdminController@webtopupHistory')->name('ecmin.webtopup.history');
         // Stats
         Route::get('/stats/stat', 'AdminController@stats')->name('ecmin.stats');
         Route::get('/stats/statMonth', 'AdminController@statsMonth')->name('ecmin.stats.month');

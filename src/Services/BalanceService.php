@@ -33,6 +33,15 @@ class BalanceService implements IBalance
         ->get();
         return $balances;
     }
+    
+    const CURRENCY_RATES = [
+        'VND_TO_USD' => 1/24000,
+        'USD_TO_VND' => 24000,
+        'TL_TO_USD' => 1/29.97,
+        'USD_TO_TL' => 29.97,
+        'BLR_TO_USD' => 1/4.91,
+        'USD_TO_BRL' => 4.91,
+    ];
     /**
      * convert between currency
      * beware: webcoin = USD * 100
@@ -67,11 +76,23 @@ class BalanceService implements IBalance
             $multiple100 = true;
         }
         // convert
+        /* not support anymore
         $targetValue = Currency::convert()
             ->from($sourceCurrency)
             ->to($targetCurrency)
             ->amount($sourceValue)
             ->get();
+            */
+        // convert base on my table
+        $key = strtoupper($sourceCurrency) . "_TO_" . strtoupper($targetCurrency);
+        if (isset(self::CURRENCY_RATES[$key]))
+        {
+            $targetValue = $sourceValue * self::CURRENCY_RATES[$key];
+        }
+        else 
+        {
+            throw new Exception("Can not convert $sourceCurrency to $targetCurrency");
+        }
         if ($multiple100)
         {
             $targetValue = $targetValue * 100;
