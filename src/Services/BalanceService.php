@@ -34,14 +34,6 @@ class BalanceService implements IBalance
         return $balances;
     }
     
-    const CURRENCY_RATES = [
-        'VND_TO_USD' => 1/24000,
-        'USD_TO_VND' => 24000,
-        'TL_TO_USD' => 1/29.97,
-        'USD_TO_TL' => 29.97,
-        'BLR_TO_USD' => 1/4.91,
-        'USD_TO_BRL' => 4.91,
-    ];
     /**
      * convert between currency
      * beware: webcoin = USD * 100
@@ -85,9 +77,10 @@ class BalanceService implements IBalance
             */
         // convert base on my table
         $key = strtoupper($sourceCurrency) . "_TO_" . strtoupper($targetCurrency);
-        if (isset(self::CURRENCY_RATES[$key]))
+        $rate = config("currency_rates.$key", 0);
+        if (!empty($rate))
         {
-            $targetValue = $sourceValue * self::CURRENCY_RATES[$key];
+            $targetValue = $sourceValue * $rate;
         }
         else 
         {
