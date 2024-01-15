@@ -2,11 +2,11 @@
 
 return [
     'methods' => [
-        'next' => 'Next',
-        'title' => 'Please choose payment method',
-        'empty' => 'Still have no payment method. Plz try later.'
+        'next' => 'Sonraki',
+        'title' => 'Lütfen ödeme yöntemini seçin',
+        'empty' => 'Hala bir ödeme yönteminiz yok. Lütfen daha sonra deneyin'
     ],
     'credit' => [
-        'no-point' => 'You have 0 point'
+        'no-point' => '0 puanınız var'
     ]
 ];
