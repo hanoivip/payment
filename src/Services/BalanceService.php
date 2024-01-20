@@ -2,7 +2,6 @@
 
 namespace Hanoivip\Payment\Services;
 
-use AmrShawky\LaravelCurrency\Facade\Currency;
 use Hanoivip\Payment\Models\BalanceMod;
 use Hanoivip\Payment\Models\Balance;
 use Illuminate\Support\Facades\Log;
@@ -151,52 +150,6 @@ class BalanceService implements IBalance
         $log->save();
         return true;
     }
-    public function add_bk($uid, $value, $reason, $type = 0, $currency = null)
-    {
-        if ($value <= 0)
-        {
-            Log::warn("Balance value is zero or negative. skip!");
-            return;
-        }
-        if (!empty($currency))
-        {
-            // exchange: $amount => USD * 100
-            $coin = intval(Currency::convert()
-                ->from($currency)
-                ->to('USD')
-                ->amount($value)
-                ->get() * 100);
-            $reason = $reason . ":$currency@$value";
-        }
-        else
-        {
-            $coin = intval($value);
-        }
-        $balance = Balance::where('user_id', $uid)
-        ->where('balance_type', $type)
-        ->first();
-        if (empty($balance))
-        {
-            $balance = new Balance();
-            $balance->user_id = $uid;
-            $balance->balance_type = $type;
-            $balance->balance = $coin;
-            $balance->save();
-        }
-        else
-        {
-            $balance->balance += $coin;
-            $balance->save();
-        }
-        // save log
-        $log = new BalanceMod();
-        $log->user_id = $uid;
-        $log->balance_type = $type;
-        $log->balance = $coin;
-        $log->reason = $reason;
-        $log->save();
-        return true;
-    }
     
     /**
      * 
@@ -226,51 +179,6 @@ class BalanceService implements IBalance
         $balance = Balance::where('user_id', $uid)
             ->where('balance_type', $type)
             ->first();
-        if (empty($balance))
-        {
-            Log::debug("Balance user {$uid} has not balance type {$type} yet.");
-            return false;
-        }
-        if ($balance->balance < $coin)
-        {
-            Log::debug("Balance user {$uid} has not enough balance");
-            return false;
-        }
-        $balance->balance -= $coin;
-        $balance->save();
-        // save log
-        $log = new BalanceMod();
-        $log->user_id = $uid;
-        $log->balance_type = $type;
-        $log->balance = -1 * $coin;
-        $log->reason = $reason;
-        $log->save();
-        return true;
-    }
-    public function remove_bk($uid, $value, $reason, $type = 0, $currency = null)
-    {
-        if ($value <= 0)
-        {
-            Log::warn("Balance value is zero or negative. skip!");
-            return false;
-        }
-        if (!empty($currency))
-        {
-            // exchange: $amount => USD * 100
-            $coin = intval(Currency::convert()
-                ->from($currency)
-                ->to('USD')
-                ->amount($value)
-                ->get() * 100);
-            $reason = $reason . ":$currency@$value";
-        }
-        else
-        {
-            $coin = intval($value);
-        }
-        $balance = Balance::where('user_id', $uid)
-        ->where('balance_type', $type)
-        ->first();
         if (empty($balance))
         {
             Log::debug("Balance user {$uid} has not balance type {$type} yet.");
@@ -326,14 +234,13 @@ class BalanceService implements IBalance
         $balance = Balance::where('user_id', $uid)
                         ->where('balance_type', $type)
                         ->first();
-        $coin = $amount;
         if (!empty($currency))
         {
-            $coin = intval(Currency::convert()
-                ->from($currency)
-                ->to('USD')
-                ->amount($amount)
-                ->get()) * 100;
+            $coin = $this->convertWebcoin($amount, $currency);
+        }
+        else
+        {
+            $coin = $amount;
         }
         if (!empty($balance))
             return $balance->balance >= $coin;
