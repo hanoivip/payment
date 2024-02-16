@@ -22,6 +22,17 @@ class NewTopup extends Controller
         $this->service = $service;
     }
     
+    public function methods(Request $request)
+    {
+        $client = null;
+        if ($request->has('client'))
+        {
+            $client = $request->input('client');
+        }
+        $methods = $this->service->getMethods($client);
+        return ['error' => 0, 'message' => '', 'data' => $methods];
+    }
+    
     public function start(Request $request)
     {
         $order = $request->input('order');
