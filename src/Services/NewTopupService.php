@@ -50,6 +50,7 @@ class NewTopupService
                 // check for implmenetation
                 app()->make($service);
                 $cfgVo = new \stdClass();
+                $cfgVo->code = $code;
                 $cfgVo->name = $cfg['name'];
                 $cfgVo->service = $service;
                 $cfgVo->guidelines = __("hanoivip.payment::payment.$service.guidelines");
