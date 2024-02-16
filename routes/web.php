@@ -30,9 +30,7 @@ Route::middleware([
         Route::any('/stats/thisWeek', 'AdminController@thisWeek')->name('ecmin.stats.thisweek');
         Route::any('/stats/bymonth', 'AdminController@byMonth')->name('ecmin.stats.bymonth');
         // Ops 
-        //Route::any('/webtopup/retry', 'AdminController@retry')->name('ecmin.webtopup.retry');
-        //Route::any('/webtopup/check', 'AdminController@check')->name('ecmin.webtopup.check');
-        //Route::any('/webtopup/find-user-by-order', 'AdminController@findUserByOrder')->name('ecmin.webtopup.finduser');
+        //Route::any('/pay/find-user-by-order', 'AdminController@findUserByOrder')->name('ecmin.pay.finduser');
         // Balance
         Route::any('/balance/request', 'AdminController@balanceRequest')->name('ecmin.balance.request');
         //Route::any('/balance/request-pendings', 'AdminController@balancePendings')->name('ecmin.balance.pendings');

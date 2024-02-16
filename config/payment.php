@@ -7,13 +7,13 @@ return [
         'key' => '',
     ],
     'methods' => [
-        'credit' => [ 'name' => __('hanoivip.payment::payment.credit'), 'service' => 'CreditPaymentMethod', 'need_config' => false, 
+        'credit' => [ 'name' => 'Web Credit', 'service' => 'CreditPaymentMethod', 'need_config' => false, 
             'enable' => true],// otp? captcha?
-        'tsr1' => ['name' => __('hanoivip.payment::payment.tsr'), 'service' => 'TsrPaymentMethod', 
+        'tsr1' => ['name' => 'Vietnamese Prepaid Cards', 'service' => 'TsrPaymentMethod', 
             'need_config' => true, 
             'enable' => true, 
             'setting' => ['partner_id' => '0345167261', 'partner_secret' => '0aaf0fd0097a9c5e3b734b59104cffdd']],
-        'momo1' => ['name' => __('hanoivip.payment::payment.momo'), 'service' => 'MomoPaymentMethod', 'need_config' => false, 
+        'momo1' => ['name' => 'Vietnamese MOMO Wallet App', 'service' => 'MomoPaymentMethod', 'need_config' => false, 
             'enable' => true],
     ],
     'tsr' => [

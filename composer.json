@@ -3,19 +3,19 @@
 	"type" : "library",
     "repositories" : [{
 			"type" : "path",
-			"url" : "../payment-contract",
+			"url" : "./payment-contract",
 			"options" : {
 				"symlink" : true
 			}
 		}, {
 			"type" : "path",
-			"url" : "../payment-method-contract",
+			"url" : "./payment-method-contract",
 			"options" : {
 				"symlink" : true
 			}
 		}, {
 			"type" : "path",
-			"url" : "../events",
+			"url" : "./events",
 			"options" : {
 				"symlink" : true
 			}
@@ -27,7 +27,7 @@
 		"laravel/framework" : ">=5.8",
 		"hanoivip/payment-contract" : "dev-main",
 		"hanoivip/payment-method-contract" : "dev-main",
-		"mervick/curl-helper" : "^2.2"
+		"hanoivip/curl-helper" : "dev-main"
 	},
     "require-dev": {
         "filp/whoops": "~2.0",

@@ -16,7 +16,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
 
 // Payment Gateway
 Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
-    Route::any('/pay/methods', 'NewTopup@listMethods');
+    Route::any('/pay/methods', 'NewTopup@start');
     Route::any('/pay/init', 'NewTopup@choose');
     Route::any('/pay/do', 'NewTopup@topup');
     Route::any('/pay/query', 'NewTopup@query');
