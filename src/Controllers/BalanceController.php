@@ -25,7 +25,7 @@ class BalanceController extends Controller
             $info = [];
             foreach ($balances as $bal)
             {
-                $info[] = ['type' => $bal->balance_type, 'balance' => $bal->balance];
+                $info[] = ['type' => $bal->balance_type, 'balance' => $bal->balance, 'title' => __("hanoivip.payment::balance.types." . $bal->balance_type)];
             }
             return ['error' => 0, 'message' => 'success', 'data' => ['balances' => $info]];
         }

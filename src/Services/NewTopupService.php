@@ -52,8 +52,8 @@ class NewTopupService
                 $cfgVo = new \stdClass();
                 $cfgVo->name = $cfg['name'];
                 $cfgVo->service = $service;
-                $cfgVo->guidelines = __("hanoivip.payment.payment.$service.guidelines");
-                $cfgVo->url = __("hanoivip.payment.payment.$service.url");
+                $cfgVo->guidelines = __("hanoivip.payment::payment.$service.guidelines");
+                $cfgVo->url = __("hanoivip.payment::payment.$service.url");
                 $methods[$code] = $cfgVo;
             }
             catch (Exception $ex)
