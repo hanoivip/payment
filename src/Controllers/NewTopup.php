@@ -167,7 +167,7 @@ class NewTopup extends Controller
             report($ex);
             if ($request->expectsJson())
             {
-                return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.topup.error'), 'data' => []];
+                return ['error' => 99, 'message' => __('hanoivip.payment::newtopup.topup.error')];
             }
             else
             {

@@ -245,7 +245,7 @@ class NewTopupService
         }
         else 
         {
-            Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default.");
+            Log::debug("NewTopup trans $transId method $record->method missing finalize process? Use default.");
             return $this->onTopupDone($userId, $transId, $result);
         }
     }
