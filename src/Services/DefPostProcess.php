@@ -28,7 +28,7 @@ trait DefPostProcess
             {
                 if ($expectJson)
                 {
-                    return ['error' => 1, 'message' => $result];
+                    return ['error' => 1, 'message' => $result, 'data' => ['detail' => $result]];
                 }
                 return view('hanoivip::webtopup-failure', ['message' => $result]);
             }
@@ -47,7 +47,7 @@ trait DefPostProcess
                 {
                     if ($expectJson)
                     {
-                        return ['error' => 2, 'message' => $result->getDetail()];
+                        return ['error' => 2, 'message' => $result->getDetail(), 'data' => $result->toArray()];
                     }
                     return view('hanoivip::webtopup-failure', ['message' => $result->getDetail()]);
                 }
