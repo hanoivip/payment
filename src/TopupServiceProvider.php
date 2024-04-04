@@ -46,5 +46,6 @@ class TopupServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         $this->loadTranslationsFrom( __DIR__.'/../lang/', 'hanoivip.payment');
         //$this->mergeConfigFrom( __DIR__.'/../config/payment.php', 'payment');
+        $this->mergeConfigFrom( __DIR__.'/../config/currency_rates.php', 'currency_rates');
     }
 }
