@@ -75,8 +75,15 @@ class BalanceService implements IBalance
             ->get();
             */
         // convert base on my table
-        $key = strtoupper($sourceCurrency) . "_TO_" . strtoupper($targetCurrency);
-        $rate = config("currency_rates.$key", 0);
+        if (strtoupper($sourceCurrency) == strtoupper($targetCurrency))
+        {
+            $rate = 1;
+        }
+        else
+        {
+            $key = strtoupper($sourceCurrency) . "_TO_" . strtoupper($targetCurrency);
+            $rate = config("currency_rates.$key", 0);
+        }
         if (!empty($rate))
         {
             $targetValue = $sourceValue * $rate;
