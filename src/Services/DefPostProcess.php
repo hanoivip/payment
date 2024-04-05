@@ -36,7 +36,7 @@ trait DefPostProcess
             {
                 if ($result->isPending())
                 {
-                    dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+                    dispatch(new CheckPendingReceipt($userId, $receipt, $this->delivery))->delay(60);
                     if ($expectJson)
                     {
                         return ['error' => 0, 'message' => 'pending transaction', 'data' => $result->toArray()];
@@ -53,7 +53,7 @@ trait DefPostProcess
                 }
                 else
                 {
-                    dispatch(new CheckPendingReceipt($userId, $receipt));
+                    dispatch(new CheckPendingReceipt($userId, $receipt, $this->delivery));
                     if ($expectJson)
                     {
                         return ['error' => 0, 'message' => 'success', 'data' => $result->toArray()];
@@ -65,7 +65,7 @@ trait DefPostProcess
         catch (Exception $ex)
         {
             Log::error("WebTopup payment callback exception:" . $ex->getMessage());
-            dispatch(new CheckPendingReceipt($userId, $receipt))->delay(60);
+            dispatch(new CheckPendingReceipt($userId, $receipt, $this->delivery))->delay(60);
             if ($expectJson)
             {
                 return ['error' => 0, 'message' => 'We are trying our best to finish your payment', 'data' => $result->toArray()];

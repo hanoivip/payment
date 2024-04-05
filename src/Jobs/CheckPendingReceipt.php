@@ -13,6 +13,7 @@ use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\PaymentContract\Facades\PaymentFacade;
 use Hanoivip\Payment\Facades\BalanceFacade;
 use Hanoivip\Events\Gate\UserTopup;
+use Hanoivip\Game\Facades\GameHelper;
 
 class CheckPendingReceipt implements ShouldQueue
 {
@@ -25,10 +26,13 @@ class CheckPendingReceipt implements ShouldQueue
     
     private $receipt;
     
-    public function __construct($userId, $receipt)
+    private $delivery;
+    
+    public function __construct($userId, $receipt, $delivery)
     {
         $this->userId = $userId;
         $this->receipt = $receipt;
+        $this->delivery = $delivery;
     }
     
     public function handle()
@@ -51,8 +55,46 @@ class CheckPendingReceipt implements ShouldQueue
                 }
                 else 
                 {
-                    event(new UserTopup($this->userId, 0, $result->getAmount(), $this->receipt));
-                    BalanceFacade::add($this->userId, $result->getAmount(), "DefaultSuccessPayment", 0, $result->getCurrency());
+                    $ok = true;
+                    switch ($this->delivery)
+                    {
+                        case 'game':
+                            $target = GameHelper::getUserDefaultRole($this->userId);
+                            if (empty($target))
+                            {
+                                Log::error("PaymentToGame flow, but target empty. Send card to coin!");
+                                $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
+                            }
+                            else
+                            {
+                                $r = GameHelper::rechargeByMoney($this->userId, $target->server, $result->getAmount(), $target->role);
+                                if (gettype($r) == 'boolean')
+                                {
+                                    $ok = $ok && $r;
+                                }
+                                else
+                                {
+                                    $ok = false;
+                                }
+                            }
+                            break;
+                        case 'order':
+                            // get order from transaction and notify order get paid!
+                            break;
+                        case 'web':
+                        default:
+                            $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToCredit", 0, $result->getCurrency());
+                            break;
+                    }
+                    if ($ok)
+                    {
+                        event(new UserTopup($this->userId, 0, $result->getAmount(), $this->receipt));
+                    }
+                    else
+                    {
+                        // should retry
+                        $this->release(60);
+                    }
                 }
             }
             else 

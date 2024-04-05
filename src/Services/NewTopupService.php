@@ -14,7 +14,7 @@ use Illuminate\Contracts\View\View;
 
 class NewTopupService
 {   
-    use DefPostProcess;
+    //use DefPostProcess;
     
     private $transactions;
     
@@ -246,7 +246,8 @@ class NewTopupService
         else 
         {
             Log::debug("NewTopup trans $transId method $record->method missing finalize process? Use default.");
-            return $this->onTopupDone($userId, $transId, $result);
+            $clazz = app()->make('PaymentToCredit');
+            return $clazz->onTopupDone($userId, $transId, $result);
         }
     }
     /**
