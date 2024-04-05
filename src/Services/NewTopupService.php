@@ -14,8 +14,6 @@ use Illuminate\Contracts\View\View;
 
 class NewTopupService
 {   
-    //use DefPostProcess;
-    
     private $transactions;
     
     public function __construct(
