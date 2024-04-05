@@ -60,25 +60,32 @@ class CheckPendingReceipt implements ShouldQueue
                     switch ($this->delivery)
                     {
                         case 'game':
-                            //$target = GameHelper::getUserDefaultRole($this->userId);
                             $record = PaymentFacade::get($this->receipt);
                             $orderDetail = OrderFacade::detail($record->order);
-                            Log::error(print_r($orderDetail, true));
+                            //Log::error(print_r($orderDetail, true));
                             if (empty($orderDetail->cart->delivery_info))
                             {
-                                Log::error("PaymentToGame flow, but target empty. Send card to coin!");
+                                Log::error("PaymentToGame flow, but target empty. Send result to web balance!");
                                 $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
                             }
                             else
                             {
-                                $r = GameHelper::rechargeByMoney($this->userId, $orderDetail->cart->delivery_info->svname, $result->getAmount(), $orderDetail->cart->delivery_info->roleid);
-                                if (gettype($r) == 'boolean')
+                                //$r = GameHelper::rechargeByMoney($this->userId, $orderDetail->cart->delivery_info->svname, $result->getAmount(), $orderDetail->cart->delivery_info->roleid);
+                                $items = $orderDetail->cart->items;
+                                if (!empty($items))
                                 {
-                                    $ok = $ok && $r;
-                                }
-                                else
-                                {
-                                    $ok = false;
+                                    foreach ($items as $item)
+                                    {
+                                        $r = GameHelper::recharge($this->userId, $orderDetail->cart->delivery_info->svname, $item->code, $orderDetail->cart->delivery_info->roleid);
+                                        if (gettype($r) == 'boolean')
+                                        {
+                                            $ok = $ok && $r;
+                                        }
+                                        else
+                                        {
+                                            $ok = false;
+                                        }
+                                    }
                                 }
                             }
                             break;
