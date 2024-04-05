@@ -61,7 +61,9 @@ class CheckPendingReceipt implements ShouldQueue
                     {
                         case 'game':
                             //$target = GameHelper::getUserDefaultRole($this->userId);
-                            $orderDetail = OrderFacade::detail($this->receipt);
+                            $record = PaymentFacade::get($this->receipt);
+                            $orderDetail = OrderFacade::detail($record->order);
+                            Log::error(print_r($orderDetail, true));
                             if (empty($orderDetail->cart->delivery_info))
                             {
                                 Log::error("PaymentToGame flow, but target empty. Send card to coin!");
