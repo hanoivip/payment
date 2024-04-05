@@ -7,6 +7,8 @@ use Hanoivip\Payment\Services\BalanceRequest;
 use Hanoivip\Payment\Services\BalanceService;
 use Hanoivip\Payment\Services\NewTopupService;
 use Illuminate\Support\ServiceProvider;
+use Hanoivip\Payment\Services\PaymentToCredit;
+use Hanoivip\Payment\Services\PaymentToGame;
 
 class TopupServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,8 @@ class TopupServiceProvider extends ServiceProvider
             \Hanoivip\Payment\Commands\BalanceRefund::class,
         ]);
         $this->app->bind("LocalPaymentService", NewTopupService::class);
+        $this->app->bind('PaymentToCredit', PaymentToCredit::class);
+        $this->app->bind('PaymentToGame', PaymentToGame::class);
     }
     
     public function boot()
