@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\PaymentContract\Facades\PaymentFacade;
 use Hanoivip\Payment\Facades\BalanceFacade;
+use Hanoivip\Shop\Facades\OrderFacade;
 use Hanoivip\Events\Gate\UserTopup;
 use Hanoivip\Game\Facades\GameHelper;
 
@@ -59,15 +60,16 @@ class CheckPendingReceipt implements ShouldQueue
                     switch ($this->delivery)
                     {
                         case 'game':
-                            $target = GameHelper::getUserDefaultRole($this->userId);
-                            if (empty($target))
+                            //$target = GameHelper::getUserDefaultRole($this->userId);
+                            $orderDetail = OrderFacade::detail($this->receipt);
+                            if (empty($orderDetail->cart->delivery_info))
                             {
                                 Log::error("PaymentToGame flow, but target empty. Send card to coin!");
                                 $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
                             }
                             else
                             {
-                                $r = GameHelper::rechargeByMoney($this->userId, $target->server, $result->getAmount(), $target->role);
+                                $r = GameHelper::rechargeByMoney($this->userId, $orderDetail->cart->delivery_info->svname, $result->getAmount(), $orderDetail->cart->delivery_info->roleid);
                                 if (gettype($r) == 'boolean')
                                 {
                                     $ok = $ok && $r;
