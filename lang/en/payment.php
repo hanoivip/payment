@@ -20,5 +20,9 @@ return [
     'PaytrPaymentMethod' => [
         'guidelines' => 'You can pay with VISA/Master Card via paytr.com',
         'url' =>  env('APP_URL') . '/blog/pay-with-paytr-guidelines',
+    ],
+    'PaypalPaymentMethod' => [
+        'guidelines' => 'You can pay with VISA/Master Card via Paypal',
+        'url' =>  env('APP_URL') . '/blog/pay-with-paypal-guidelines',
     ]
 ];
