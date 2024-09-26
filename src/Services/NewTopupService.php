@@ -44,6 +44,8 @@ class NewTopupService
         {
             try
             {
+                if (empty($cfg['enable'])) 
+                    continue;
                 $service = $cfg['service'];
                 // check for implmenetation
                 app()->make($service);
