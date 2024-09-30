@@ -66,7 +66,7 @@ class CheckPendingReceipt implements ShouldQueue
                             if (empty($orderDetail->cart->delivery_info))
                             {
                                 Log::error("PaymentToGame flow, but target empty. Send result to web balance!");
-                                $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
+                                $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame1", 0, $result->getCurrency());
                             }
                             else
                             {
@@ -92,11 +92,15 @@ class CheckPendingReceipt implements ShouldQueue
                                             }
                                         }
                                     }
+                                    if ($converted > $orderDetail->price) {
+                                        $changes = int($converted - $orderDetail->price);
+                                        BalanceFacade::add($this->userId, $changes, "PaymentToGame3", 0, $result->getCurrency());
+                                    }
                                 }
                                 else
                                 {
                                     // not enough money, send back web wallet
-                                    $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
+                                    $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame2", 0, $result->getCurrency());
                                 }
                             }
                             break;
