@@ -28,9 +28,9 @@ class AppTopup extends Controller
         $methods = $this->service->getMethods($client);
         $ret = [];
         if (!empty($methods)) {
-            foreach ($methods as $method) {
-                if (!empty($methods[$method]->show))
-                    $ret[$method] = $methods[$method];
+            foreach ($methods as $method => $cfg) {
+                if (!empty($cfg->show))
+                    $ret[$method] = $cfg;
             }
         }
         return ['error' => 0, 'message' => '', 'data' => $ret];

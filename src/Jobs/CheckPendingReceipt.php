@@ -126,7 +126,7 @@ class CheckPendingReceipt implements ShouldQueue
             }
         }, function () {
             // Could not obtain lock...
-            return $this->release(120);
+            return $this->release(60);
         });
             
     }
