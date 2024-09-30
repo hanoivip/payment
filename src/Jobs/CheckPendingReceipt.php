@@ -46,9 +46,9 @@ class CheckPendingReceipt implements ShouldQueue
                 if ($result->isPending())
                 {
                     if ($this->attempts() < 10)
-                        $this->release(60);
+                        $this->release(30);
                     else 
-                        $this->release(120);
+                        $this->release(60);
                 }
                 else if ($result->isFailure())
                 {
@@ -70,22 +70,33 @@ class CheckPendingReceipt implements ShouldQueue
                             }
                             else
                             {
-                                //$r = GameHelper::rechargeByMoney($this->userId, $orderDetail->cart->delivery_info->svname, $result->getAmount(), $orderDetail->cart->delivery_info->roleid);
-                                $items = $orderDetail->cart->items;
-                                if (!empty($items))
-                                {
-                                    foreach ($items as $item)
+                                // check enough money
+                                $amount = $result->getAmount();
+                                $converted = BalanceFacade::convert($amount, $result->getCurrency(), $orderDetail->currency);
+                                if ($converted >= $orderDetail->price) {
+                                    //TODO: implement this fea
+                                    //$r = GameHelper::rechargeByMoney($this->userId, $orderDetail->cart->delivery_info->svname, $result->getAmount(), $orderDetail->cart->delivery_info->roleid);
+                                    $items = $orderDetail->cart->items;
+                                    if (!empty($items))
                                     {
-                                        $r = GameHelper::recharge($this->userId, $orderDetail->cart->delivery_info->svname, $item->code, $orderDetail->cart->delivery_info->roleid);
-                                        if (gettype($r) == 'boolean')
+                                        foreach ($items as $item)
                                         {
-                                            $ok = $ok && $r;
-                                        }
-                                        else
-                                        {
-                                            $ok = false;
+                                            $r = GameHelper::recharge($this->userId, $orderDetail->cart->delivery_info->svname, $item->code, $orderDetail->cart->delivery_info->roleid);
+                                            if (gettype($r) == 'boolean')
+                                            {
+                                                $ok = $ok && $r;
+                                            }
+                                            else
+                                            {
+                                                $ok = false;
+                                            }
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    // not enough money, send back web wallet
+                                    $ok = $ok && BalanceFacade::add($this->userId, $result->getAmount(), "PaymentToGame", 0, $result->getCurrency());
                                 }
                             }
                             break;
@@ -104,7 +115,7 @@ class CheckPendingReceipt implements ShouldQueue
                     else
                     {
                         // should retry
-                        $this->release(60);
+                        $this->release(30);
                     }
                 }
             }
