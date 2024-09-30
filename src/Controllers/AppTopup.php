@@ -29,7 +29,7 @@ class AppTopup extends Controller
         $ret = [];
         if (!empty($methods)) {
             foreach ($methods as $method) {
-                if (!empty($methods[$method]['show']))
+                if (!empty($methods[$method]->show))
                     $ret[$method] = $methods[$method];
             }
         }

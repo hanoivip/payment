@@ -52,6 +52,7 @@ class NewTopupService
                 $cfgVo = new \stdClass();
                 $cfgVo->code = $code;
                 $cfgVo->name = $cfg['name'];
+                $cfgVo->show = $cfg['show'];
                 $cfgVo->service = $service;
                 $cfgVo->guidelines = __("hanoivip.payment::payment.$service.guidelines");
                 $cfgVo->url = __("hanoivip.payment::payment.$service.url");
