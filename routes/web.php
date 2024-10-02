@@ -3,24 +3,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'web',
-    'auth:web'
+    // 'auth:web'
 ])->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Payment Gateway
     Route::get('/new/topup', 'NewTopup@start')->name('newtopup');
     Route::post('/new/topup/shop', 'NewTopup@showShop')->name('newtopup.shop');
     Route::post('/new/topup', 'NewTopup@choose')->name('newtopup.choose');
-    //no need auth
-    //Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
-    //Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
+    Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
+    Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
     // 202304: balance partial
-    Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
+    //Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
 });
 
 Route::middleware([
-    'web'
+    'web',
+    'auth:web'
 ])->namespace('Hanoivip\Payment\Controllers')->group(function () {
-    Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
-    Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
+    Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
 });
 
 Route::middleware([
