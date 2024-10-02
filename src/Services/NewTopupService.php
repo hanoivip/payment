@@ -208,7 +208,8 @@ class NewTopupService
         $this->transactions->saveResult($record, $result);
         $next = $record->next;
         
-        $userId = Auth::user()->getAuthIdentifier();
+        //$userId = Auth::user()->getAuthIdentifier();
+        $defaultProcess = false;
         if (!empty($next))
         {
             if (strpos($next, 'http') === false)
@@ -227,14 +228,16 @@ class NewTopupService
                         {
                             Log::debug("NewTopupService payment done on $next class");
                             /** @var IPaymentDone $clazz */
-                            return $clazz->onTopupDone($userId, $transId, $result);
+                            // return $clazz->onTopupDone($userId, $transId, $result);
+                            $defaultProcess = true;
                         }
                     }
                     catch (Exception $ex)
                     {
                         Log::error("NewTopup resolve clazz $next error " . $ex->getMessage());
                         Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default.");
-                        return $this->onTopupDone($userId, $transId, $result);
+                        //return $this->onTopupDone($userId, $transId, $result);
+                        $defaultProcess = true;
                     }
                 }
             }
@@ -247,8 +250,13 @@ class NewTopupService
         else 
         {
             Log::debug("NewTopup trans $transId method $record->method missing finalize process? Use default.");
-            $clazz = app()->make('PaymentToCredit');
-            return $clazz->onTopupDone($userId, $transId, $result);
+            //$clazz = app()->make('PaymentToCredit');
+            //return $clazz->onTopupDone($userId, $transId, $result);
+            $defaultProcess = true;
+        }
+        if ($defaultProcess) {
+            Log::debug("NewTopup trans $transId has no post process. Use default process.. Redirect to shopv2.callback");
+            return response()->redirectToRoute('shopv2.pay.callback', ['order' => $record->order, 'receipt' => $transId]);
         }
     }
     /**
