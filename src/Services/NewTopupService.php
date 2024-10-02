@@ -10,6 +10,7 @@ use Hanoivip\PaymentMethodContract\IPaymentMethod;
 use Hanoivip\PaymentMethodContract\IPaymentResult;
 use Hanoivip\Events\Payment\TransactionUpdated;
 use Hanoivip\PaymentMethodContract\IPaymentSession;
+use Hanoivip\Shop\Facades\OrderFacade;
 use Illuminate\Contracts\View\View;
 
 class NewTopupService
@@ -209,7 +210,8 @@ class NewTopupService
         $next = $record->next;
         
         //$userId = Auth::user()->getAuthIdentifier();
-        $defaultProcess = false;
+        $orderDetail = OrderFacade::detail($record->order);
+        $userId = $orderDetail->userId;
         if (!empty($next))
         {
             if (strpos($next, 'http') === false)
@@ -228,16 +230,14 @@ class NewTopupService
                         {
                             Log::debug("NewTopupService payment done on $next class");
                             /** @var IPaymentDone $clazz */
-                            // return $clazz->onTopupDone($userId, $transId, $result);
-                            $defaultProcess = true;
+                            return $clazz->onTopupDone($userId, $transId, $result);
                         }
                     }
                     catch (Exception $ex)
                     {
                         Log::error("NewTopup resolve clazz $next error " . $ex->getMessage());
-                        Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default.");
-                        //return $this->onTopupDone($userId, $transId, $result);
-                        $defaultProcess = true;
+                        Log::warn("NewTopup trans $transId method $record->method missing finalize process? Use default: shopv2.pay.callback");
+                        return response()->redirectToRoute('shopv2.pay.callback', ['order' => $record->order, 'receipt' => $transId]);
                     }
                 }
             }
@@ -250,13 +250,8 @@ class NewTopupService
         else 
         {
             Log::debug("NewTopup trans $transId method $record->method missing finalize process? Use default.");
-            //$clazz = app()->make('PaymentToCredit');
-            //return $clazz->onTopupDone($userId, $transId, $result);
-            $defaultProcess = true;
-        }
-        if ($defaultProcess) {
-            Log::debug("NewTopup trans $transId has no post process. Use default process.. Redirect to shopv2.callback");
-            return response()->redirectToRoute('shopv2.pay.callback', ['order' => $record->order, 'receipt' => $transId]);
+            $clazz = app()->make('PaymentToCredit');
+            return $clazz->onTopupDone($userId, $transId, $result);
         }
     }
     /**
