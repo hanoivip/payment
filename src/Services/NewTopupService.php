@@ -211,7 +211,7 @@ class NewTopupService
         
         //$userId = Auth::user()->getAuthIdentifier();
         $orderDetail = OrderFacade::detail($record->order);
-        $userId = $orderDetail->userId;
+        $userId = $orderDetail->user_id;
         if (!empty($next))
         {
             if (strpos($next, 'http') === false)
