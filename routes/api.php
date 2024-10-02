@@ -12,7 +12,8 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     Route::any('/history/buys', 'HistoryController@rechargeHistory')->name('api.history.recharge');
 });
 // Payment Gateway
-Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
+//Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
+Route::prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     //Route::any('/pay/methods', 'NewTopup@methods');
     Route::any('/pay/methods', 'AppTopup@methods');
     Route::any('/pay/init', 'NewTopup@choose');
