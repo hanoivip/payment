@@ -8,10 +8,10 @@ class ModBalancesTable extends Migration
 {
     public function up()
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::table('balances', function (Blueprint $table) {
             $table->float('balance');
         });
-        Schema::create('balance_mods', function (Blueprint $table) {
+            Schema::table('balance_mods', function (Blueprint $table) {
             $table->float('balance');
         });
     }
