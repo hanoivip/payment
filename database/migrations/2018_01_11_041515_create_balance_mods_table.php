@@ -6,11 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateBalanceModsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('balance_mods', function (Blueprint $table) {
@@ -23,11 +18,6 @@ class CreateBalanceModsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('balance_mods');

@@ -120,7 +120,7 @@ class BalanceService implements IBalance
     {
         if ($value <= 0)
         {
-            Log::warn("Balance value is zero or negative. skip!");
+            Log::error("Balance value is zero or negative. skip!");
             return;
         }
         if (!empty($currency))
@@ -130,7 +130,7 @@ class BalanceService implements IBalance
         }
         else
         {
-            $coin = intval($value);
+            $coin = $value;
         }
         $balance = Balance::where('user_id', $uid)
                         ->where('balance_type', $type)
@@ -181,7 +181,7 @@ class BalanceService implements IBalance
         }
         else 
         {
-            $coin = intval($value);
+            $coin = $value;
         }
         $balance = Balance::where('user_id', $uid)
             ->where('balance_type', $type)
