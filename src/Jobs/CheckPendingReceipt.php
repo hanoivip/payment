@@ -56,13 +56,13 @@ class CheckPendingReceipt implements ShouldQueue
                 }
                 else 
                 {
+                    $record = PaymentFacade::get($this->receipt);
+                    $orderDetail = OrderFacade::detail($record->order);
+                    //Log::error(print_r($orderDetail, true));
                     $ok = true;
                     switch ($this->delivery)
                     {
                         case 'game':
-                            $record = PaymentFacade::get($this->receipt);
-                            $orderDetail = OrderFacade::detail($record->order);
-                            //Log::error(print_r($orderDetail, true));
                             if (empty($orderDetail->cart->delivery_info))
                             {
                                 Log::error("PaymentToGame flow, but target empty. Send result to web balance!");
@@ -115,6 +115,7 @@ class CheckPendingReceipt implements ShouldQueue
                     if ($ok)
                     {
                         event(new UserTopup($this->userId, 0, $result->getAmount(), $this->receipt));
+                        OrderFacade::onFinish($record->order, "PaymentOK");
                     }
                     else
                     {
@@ -126,7 +127,7 @@ class CheckPendingReceipt implements ShouldQueue
             else 
             {
                 Log::error("CheckPendingReceipt query transaction $this->receipt error..retry after 10 min");
-                $this->release(600);
+                $this->release(180);
             }
         }, function () {
             // Could not obtain lock...
