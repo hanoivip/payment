@@ -94,7 +94,7 @@ class CheckPendingReceipt implements ShouldQueue
                                     }
                                     if ($converted > $orderDetail->price) {
                                         $changes = $converted - $orderDetail->price;
-                                        BalanceFacade::add($this->userId, $changes, "PaymentToGame3", 0, $result->getCurrency());
+                                        BalanceFacade::add($this->userId, $changes, "PaymentToGame3", 0, $orderDetail->currency);
                                     }
                                 }
                                 else
