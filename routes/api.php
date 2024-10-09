@@ -5,7 +5,7 @@ Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Contro
     // Xem thông tin tài khoản
     Route::any('/topup/info', 'BalanceController@info')->name('api.balance.info');
     // Lịch sử chuyển xu
-    Route::any('/wallet/changes', 'BalanceController@modHistory')->name('api.history.recharge');
+    Route::any('/balance/changes', 'BalanceController@modHistory')->name('api.history.recharge');
 });
 // Payment Gateway
 //Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
