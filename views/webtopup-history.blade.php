@@ -26,13 +26,6 @@ table, th, td {
 }
 </style>
 
-<div id="history-submits">
-	@include('hanoivip::webtopup-history-submits', ['submits' => $submits])
-</div>
-@for ($i=0; $i<$total_submits; ++$i)
-	<a class="webtopup-history-page" data-action="{{ route('api.history.topup') }}" data-page="{{$i}}" data-update-id="history-submits">{{$i}}</a>
-@endfor
-
 <div id="history-recharges">
 	@include('hanoivip::webtopup-history-mods', ['mods' => $mods])
 </div>

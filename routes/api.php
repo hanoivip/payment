@@ -4,12 +4,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {
     // Xem thông tin tài khoản
     Route::any('/topup/info', 'BalanceController@info')->name('api.balance.info');
-    // Lịch sử nạp
-    //Route::middleware('cacheByUser:60')->any('/topup/historyP', 'WebTopup@topupHistory');
-    Route::middleware('cacheByUser:60')->any('/history/cards', 'HistoryController@topupHistory')->name('api.history.topup');
     // Lịch sử chuyển xu
-    Route::any('/topup/historyR', 'BalanceController@modHistory');
-    Route::any('/history/buys', 'HistoryController@rechargeHistory')->name('api.history.recharge');
+    Route::any('/wallet/changes', 'BalanceController@modHistory')->name('api.history.recharge');
 });
 // Payment Gateway
 //Route::middleware('auth:api')->prefix('api')->namespace('Hanoivip\Payment\Controllers')->group(function () {

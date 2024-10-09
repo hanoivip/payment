@@ -46,11 +46,11 @@ class BalanceController extends Controller
         $mods = $this->balance->getHistory($uid, $page);
         if ($request->ajax())
         {
-            return ['mods' => $mods[0], 'total_page' => $mods[1], 'current_page' => $mods[2]];
+            return ['error' => 0, 'message' => '', 'data' =>['mods' => $mods[0], 'total_page' => $mods[1], 'current_page' => $mods[2]]];
         }
         else
         {
-            return view('hanoivip::recharge-history', ['mods' => $mods]);
+            return view('hanoivip::webtopup-history-mods', ['mods' => $mods[0], 'total_mods' => $mods[1], 'current_page' => $mods[2]]);
         }
     }
 

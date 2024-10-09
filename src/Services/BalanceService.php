@@ -209,7 +209,7 @@ class BalanceService implements IBalance
     }
     
     /**
-     * 
+     * TODO: ultilize lavavel paginate
      * @param number $uid User ID
      * @param number $page Requested Page
      * @param number $count Number of rows to fetch

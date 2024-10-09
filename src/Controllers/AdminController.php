@@ -32,21 +32,6 @@ class AdminController extends Controller
         $this->request = $request;
     }
 
-    public function webtopupHistory(Request $request)
-    {
-        $page = 0;
-        if ($request->has('page'))
-            $page = $request->input('page');
-        $tid = $request->input('tid');
-        $history = $this->logs->list($tid, $page);
-        return view('hanoivip::admin.webtopup-history', [
-            'submits' => $history[0],
-            'total_page' => $history[1],
-            'current_page' => $history[2],
-            'tid' => $tid
-        ]);
-    }
-
     public function balanceHistory(Request $request)
     {
         $page = 0;
