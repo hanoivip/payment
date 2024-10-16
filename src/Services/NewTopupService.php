@@ -209,9 +209,10 @@ class NewTopupService
         $this->transactions->saveResult($record, $result);
         $next = $record->next;
         
-        //$userId = Auth::user()->getAuthIdentifier();
-        $orderDetail = OrderFacade::detail($record->order);
-        $userId = $orderDetail->user_id;
+        // TODO: pay chay doc lap voi home thi cai nay ko tim duoc user???
+        $userId = Auth::user()->getAuthIdentifier();
+        //$orderDetail = OrderFacade::detail($record->order);
+        //$userId = $orderDetail->user_id;
         if (!empty($next))
         {
             if (strpos($next, 'http') === false)
