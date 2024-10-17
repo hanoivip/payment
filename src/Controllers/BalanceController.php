@@ -29,6 +29,9 @@ class BalanceController extends Controller
                     'balance' => $bal->balance, 
                     'title' => __("hanoivip.payment::balance.types." . $bal->balance_type)];
             }
+            if (empty($info)) {
+                $info[] = ['type' => 0, 'balance' => 0, 'title' => __("hanoivip.payment::balance.types.0")];
+            }
             return ['error' => 0, 'message' => 'success', 'data' => ['balances' => $info]];
         }
         else
