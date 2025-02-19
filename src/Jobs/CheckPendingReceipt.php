@@ -46,9 +46,9 @@ class CheckPendingReceipt implements ShouldQueue
                 if ($result->isPending())
                 {
                     if ($this->attempts() < 10)
-                        $this->release(30);
+                        $this->release(5);
                     else 
-                        $this->release(60);
+                        $this->release($this->attempts() * 2);
                 }
                 else if ($result->isFailure())
                 {
@@ -131,7 +131,7 @@ class CheckPendingReceipt implements ShouldQueue
             }
         }, function () {
             // Could not obtain lock...
-            return $this->release(60);
+            return $this->release(30);
         });
             
     }
