@@ -36,7 +36,7 @@ trait DefPostProcess
             {
                 if ($result->isPending())
                 {
-                    dispatch(new CheckPendingReceipt($userId, $receipt, $this->delivery))->delay(60);
+                    dispatch(new CheckPendingReceipt($userId, $receipt, $this->delivery))->delay(5);
                     if ($expectJson)
                     {
                         return ['error' => 0, 'message' => 'pending transaction', 'data' => $result->toArray()];
