@@ -57,6 +57,9 @@ class CheckPendingReceipt implements ShouldQueue
                 else 
                 {
                     $record = PaymentFacade::get($this->receipt);
+                    if (OrderFacade::isSent($record->order)) {
+                        Log::error("CheckPending order is some how multiple checked? " . $record->order);
+                    }
                     $orderDetail = OrderFacade::detail($record->order);
                     //Log::error(print_r($orderDetail, true));
                     $ok = true;

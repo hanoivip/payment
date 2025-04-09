@@ -209,6 +209,11 @@ class NewTopupService
         $this->transactions->saveResult($record, $result);
         $next = $record->next;
         
+        if (OrderFacade::isPaid($record->order)) {
+            Log::error("NewToup service multiple payment for single order? " . $record->order);
+            abort(500, "Fuck");
+        }
+        //separate payment into dedicated node
         //$userId = Auth::user()->getAuthIdentifier();
         $orderDetail = OrderFacade::detail($record->order);
         $userId = $orderDetail->user_id;

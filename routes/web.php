@@ -9,7 +9,7 @@ Route::middleware([
     Route::get('/new/topup', 'NewTopup@start')->name('newtopup');
     Route::post('/new/topup/shop', 'NewTopup@showShop')->name('newtopup.shop');
     Route::post('/new/topup', 'NewTopup@choose')->name('newtopup.choose');
-    Route::any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
+    Route::middleware('lockByUser:10,5')->any('/new/topup/do', 'NewTopup@topup')->name('newtopup.do');
     Route::any('/new/topup/query', 'NewTopup@query')->name('newtopup.query');
     // 202304: balance partial
     //Route::any('/balance/info', 'BalanceController@info')->name('balance.info');
